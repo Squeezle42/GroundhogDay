@@ -1,0 +1,635 @@
+/* Time Loop Game - Main Stylesheet */
+
+/* ---------- CSS Variables ---------- */
+:root {
+  /* Color Palette - Winter Town Theme */
+  --color-primary: #2c3e50;         /* Deep blue-gray */
+  --color-secondary: #3498db;       /* Sky blue */
+  --color-accent: #e74c3c;          /* Brick red */
+  --color-text: #ecf0f1;            /* Off-white */
+  --color-text-dark: #2c3e50;       /* Dark blue-gray for text on light backgrounds */
+  --color-background: #1a1a2e;      /* Dark blue-purple */
+  --color-snow: #ecf0f1;            /* Snow white */
+  --color-wood: #8b4513;            /* Wood brown */
+  
+  /* UI Elements */
+  --color-ui-background: rgba(26, 26, 46, 0.85);
+  --color-ui-border: #3498db;
+  --color-ui-highlight: #e74c3c;
+  --color-ui-button: #2980b9;
+  --color-ui-button-hover: #3498db;
+  
+  /* Fonts */
+  --font-main: 'Roboto', sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
+  --font-ui: 'Open Sans', sans-serif;
+  
+  /* Sizes */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  /* Transitions */
+  --transition-speed: 0.3s;
+  
+  /* Z-index layers */
+  --z-game-canvas: 1;
+  --z-game-ui: 10;
+  --z-dialogue: 20;
+  --z-menu: 30;
+  --z-journal: 40;
+  --z-inventory: 50;
+  --z-loading: 100;
+}
+
+/* ---------- Global Styles ---------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  overflow: hidden;
+  height: 100vh;
+}
+
+button {
+  cursor: pointer;
+  background: var(--color-ui-button);
+  color: var(--color-text);
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-family: var(--font-ui);
+  transition: background-color var(--transition-speed);
+}
+
+button:hover {
+  background: var(--color-ui-button-hover);
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------- Game Container ---------- */
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---------- Game Canvas ---------- */
+#game-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: var(--z-game-canvas);
+}
+
+/* ---------- Loading Screen ---------- */
+#loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--z-loading);
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-content h1 {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text);
+}
+
+.loading-progress {
+  width: 300px;
+  height: 20px;
+  background-color: var(--color-primary);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 0 auto var(--spacing-md);
+}
+
+#loading-bar {
+  height: 100%;
+  width: 0%;
+  background-color: var(--color-secondary);
+  transition: width 0.3s;
+}
+
+#loading-text {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+/* ---------- Menu Screens ---------- */
+.menu-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(26, 26, 46, 0.9);
+  z-index: var(--z-menu);
+}
+
+.menu-content {
+  background-color: var(--color-primary);
+  border-radius: 10px;
+  padding: var(--spacing-xl);
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.menu-content h1 {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  margin-bottom: var(--spacing-xl);
+  color: var(--color-text);
+}
+
+.menu-content h2 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text);
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.menu-button {
+  padding: var(--spacing-md);
+  font-size: 1.2rem;
+  border-radius: 5px;
+}
+
+/* ---------- Game UI ---------- */
+#game-ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: var(--z-game-ui);
+}
+
+.ui-element {
+  pointer-events: auto;
+  background-color: var(--color-ui-background);
+  border: 2px solid var(--color-ui-border);
+  border-radius: 5px;
+  padding: var(--spacing-sm);
+}
+
+#time-display {
+  position: absolute;
+  top: var(--spacing-md);
+  left: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#day-counter, #clock {
+  font-family: var(--font-ui);
+  font-size: 1.1rem;
+}
+
+#player-status {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 200px;
+}
+
+.meter-label {
+  font-size: 0.8rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.meter-bar {
+  width: 100%;
+  height: 15px;
+  background-color: var(--color-primary);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.meter-value {
+  height: 100%;
+  width: 75%;
+  background-color: var(--color-secondary);
+  transition: width 0.3s;
+}
+
+.ui-button {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: var(--color-ui-background);
+  border: 2px solid var(--color-ui-border);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: border-color var(--transition-speed);
+}
+
+.ui-button img {
+  max-width: 60%;
+  max-height: 60%;
+}
+
+.ui-button:hover {
+  border-color: var(--color-ui-highlight);
+}
+
+#inventory-button {
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+}
+
+#journal-button {
+  bottom: var(--spacing-md);
+  right: calc(var(--spacing-md) + 60px);
+}
+
+/* ---------- Dialogue Interface ---------- */
+#dialogue-container {
+  position: absolute;
+  bottom: var(--spacing-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  max-width: 800px;
+  background-color: var(--color-ui-background);
+  border: 2px solid var(--color-ui-border);
+  border-radius: 10px;
+  padding: var(--spacing-md);
+  display: flex;
+  z-index: var(--z-dialogue);
+}
+
+.dialogue-portrait {
+  width: 100px;
+  height: 100px;
+  background-color: var(--color-primary);
+  border-radius: 50%;
+  margin-right: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.dialogue-content {
+  flex-grow: 1;
+}
+
+.dialogue-name {
+  font-family: var(--font-ui);
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.dialogue-text {
+  font-family: var(--font-main);
+  font-size: 1rem;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.5;
+}
+
+.dialogue-choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.dialogue-choice {
+  background-color: var(--color-primary);
+  padding: var(--spacing-sm);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.dialogue-choice:hover {
+  background-color: var(--color-secondary);
+}
+
+/* ---------- Journal Interface ---------- */
+#journal-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  max-width: 900px;
+  background-color: var(--color-ui-background);
+  border: 2px solid var(--color-ui-border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: var(--z-journal);
+}
+
+.journal-header {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-ui-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.journal-header h2 {
+  font-family: var(--font-heading);
+  color: var(--color-text);
+}
+
+.close-button {
+  background: none;
+  color: var(--color-text);
+  font-size: 1.5rem;
+  padding: var(--spacing-xs);
+  cursor: pointer;
+  border: none;
+}
+
+.journal-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-ui-border);
+}
+
+.journal-tab {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: none;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.journal-tab:hover {
+  background-color: var(--color-primary);
+}
+
+.journal-tab.active {
+  background-color: var(--color-secondary);
+  color: var(--color-text-dark);
+}
+
+.journal-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: var(--spacing-md);
+}
+
+.tab-content {
+  display: none;
+  height: 100%;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ---------- Inventory Interface ---------- */
+#inventory-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  max-width: 900px;
+  background-color: var(--color-ui-background);
+  border: 2px solid var(--color-ui-border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  z-index: var(--z-inventory);
+}
+
+.inventory-header {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--color-ui-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inventory-header h2 {
+  font-family: var(--font-heading);
+  color: var(--color-text);
+}
+
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.inventory-item {
+  width: 80px;
+  height: 80px;
+  background-color: var(--color-primary);
+  border: 2px solid transparent;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: border-color var(--transition-speed);
+}
+
+.inventory-item:hover {
+  border-color: var(--color-ui-highlight);
+}
+
+.inventory-item img {
+  max-width: 70%;
+  max-height: 70%;
+}
+
+.inventory-detail {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--color-ui-border);
+}
+
+.inventory-detail h3 {
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-secondary);
+}
+
+.inventory-detail p {
+  margin-bottom: var(--spacing-md);
+  line-height: 1.4;
+}
+
+#item-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+/* ---------- Options Menu ---------- */
+.options-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text);
+  text-align: left;
+}
+
+.option-group h3 {
+  margin-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-ui-border);
+  padding-bottom: var(--spacing-xs);
+}
+
+.option-slider {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.option-slider label {
+  flex: 0 0 120px;
+}
+
+.option-slider input {
+  flex-grow: 1;
+  margin-right: var(--spacing-sm);
+}
+
+.option-toggle {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.option-toggle label {
+  flex: 0 0 120px;
+}
+
+.option-toggle select {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  border: 1px solid var(--color-ui-border);
+}
+
+.option-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+}
+
+.option-checkbox input {
+  margin-right: var(--spacing-sm);
+}
+
+/* ---------- Accessibility Classes ---------- */
+.large-text {
+  font-size: 1.2em;
+}
+
+.high-contrast {
+  --color-ui-background: rgba(0, 0, 0, 0.95);
+  --color-ui-border: #ffffff;
+  --color-text: #ffffff;
+  --color-secondary: #ffcc00;
+  --color-ui-highlight: #ffcc00;
+}
+
+.reduced-motion {
+  --transition-speed: 0s;
+}
+
+/* ---------- Responsive Design ---------- */
+@media (max-width: 768px) {
+  .menu-content {
+    width: 90%;
+    padding: var(--spacing-md);
+  }
+  
+  .menu-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  #dialogue-container {
+    width: 95%;
+  }
+  
+  .dialogue-portrait {
+    width: 70px;
+    height: 70px;
+  }
+  
+  #journal-container,
+  #inventory-container {
+    width: 95%;
+    height: 90%;
+  }
+  
+  .inventory-grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  }
+  
+  .inventory-item {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .menu-content h1 {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .dialogue-portrait {
+    display: none;
+  }
+  
+  .option-slider label,
+  .option-toggle label {
+    flex: 0 0 100px;
+  }
+}

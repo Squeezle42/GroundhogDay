@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Loop - A Groundhog Day-Inspired Game</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="icon" href="assets/images/favicon.ico">
+    <meta name="description" content="A narrative adventure game where you're trapped in an endlessly repeating day in a small winter town.">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Game Canvas -->
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- Loading Screen -->
+        <div id="loading-screen">
+            <div class="loading-content">
+                <h1>Time Loop</h1>
+                <div class="loading-progress">
+                    <div id="loading-bar"></div>
+                </div>
+                <p id="loading-text">Loading...</p>
+            </div>
+        </div>
+        
+        <!-- Main Menu -->
+        <div id="main-menu" class="menu-screen hidden">
+            <div class="menu-content">
+                <h1>Time Loop</h1>
+                <div class="menu-buttons">
+                    <button id="start-game" class="menu-button">Start Game</button>
+                    <button id="continue-game" class="menu-button">Continue</button>
+                    <button id="options" class="menu-button">Options</button>
+                    <button id="credits" class="menu-button">Credits</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dialogue Interface -->
+        <div id="dialogue-container" class="hidden">
+            <div class="dialogue-portrait" id="npc-portrait"></div>
+            <div class="dialogue-content">
+                <p id="speaker-name" class="dialogue-name"></p>
+                <p id="dialogue-text" class="dialogue-text"></p>
+            </div>
+            <div id="dialogue-choices" class="dialogue-choices"></div>
+        </div>
+        
+        <!-- Game UI -->
+        <div id="game-ui" class="hidden">
+            <div id="time-display" class="ui-element">
+                <div id="day-counter">Day: <span id="current-day">1</span></div>
+                <div id="clock">6:00 AM</div>
+            </div>
+            
+            <div id="player-status" class="ui-element">
+                <div id="energy-meter">
+                    <div class="meter-label">Energy</div>
+                    <div class="meter-bar">
+                        <div id="energy-value" class="meter-value"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="inventory-button" class="ui-button">
+                <img src="assets/images/ui/inventory-icon.png" alt="Inventory">
+            </div>
+            
+            <div id="journal-button" class="ui-button">
+                <img src="assets/images/ui/journal-icon.png" alt="Journal">
+            </div>
+        </div>
+        
+        <!-- Journal Interface -->
+        <div id="journal-container" class="hidden">
+            <div class="journal-header">
+                <h2>Journal</h2>
+                <button id="close-journal" class="close-button">×</button>
+            </div>
+            <div class="journal-tabs">
+                <button id="tab-knowledge" class="journal-tab active">Knowledge</button>
+                <button id="tab-quests" class="journal-tab">Quests</button>
+                <button id="tab-people" class="journal-tab">People</button>
+            </div>
+            <div class="journal-content">
+                <div id="knowledge-content" class="tab-content active"></div>
+                <div id="quests-content" class="tab-content"></div>
+                <div id="people-content" class="tab-content"></div>
+            </div>
+        </div>
+        
+        <!-- Inventory Interface -->
+        <div id="inventory-container" class="hidden">
+            <div class="inventory-header">
+                <h2>Inventory</h2>
+                <button id="close-inventory" class="close-button">×</button>
+            </div>
+            <div class="inventory-grid" id="inventory-grid"></div>
+            <div class="inventory-detail" id="inventory-detail">
+                <h3 id="item-name"></h3>
+                <p id="item-description"></p>
+                <div id="item-actions"></div>
+            </div>
+        </div>
+        
+        <!-- Pause Menu -->
+        <div id="pause-menu" class="menu-screen hidden">
+            <div class="menu-content">
+                <h2>Game Paused</h2>
+                <div class="menu-buttons">
+                    <button id="resume-game" class="menu-button">Resume Game</button>
+                    <button id="save-game" class="menu-button">Save Game</button>
+                    <button id="load-game" class="menu-button">Load Game</button>
+                    <button id="options-pause" class="menu-button">Options</button>
+                    <button id="exit-to-menu" class="menu-button">Exit to Main Menu</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Options Menu -->
+        <div id="options-menu" class="menu-screen hidden">
+            <div class="menu-content">
+                <h2>Options</h2>
+                <div class="options-container">
+                    <div class="option-group">
+                        <h3>Audio</h3>
+                        <div class="option-slider">
+                            <label for="music-volume">Music Volume</label>
+                            <input type="range" id="music-volume" min="0" max="100" value="70">
+                            <span id="music-volume-value">70%</span>
+                        </div>
+                        <div class="option-slider">
+                            <label for="sfx-volume">Sound Effects Volume</label>
+                            <input type="range" id="sfx-volume" min="0" max="100" value="80">
+                            <span id="sfx-volume-value">80%</span>
+                        </div>
+                    </div>
+                    <div class="option-group">
+                        <h3>Graphics</h3>
+                        <div class="option-toggle">
+                            <label for="graphics-quality">Graphics Quality:</label>
+                            <select id="graphics-quality">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="option-group">
+                        <h3>Accessibility</h3>
+                        <div class="option-checkbox">
+                            <input type="checkbox" id="larger-text">
+                            <label for="larger-text">Larger Text</label>
+                        </div>
+                        <div class="option-checkbox">
+                            <input type="checkbox" id="high-contrast">
+                            <label for="high-contrast">High Contrast</label>
+                        </div>
+                        <div class="option-checkbox">
+                            <input type="checkbox" id="reduced-motion">
+                            <label for="reduced-motion">Reduced Motion</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="menu-buttons">
+                    <button id="apply-options" class="menu-button">Apply</button>
+                    <button id="back-from-options" class="menu-button">Back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Script Loading -->
+    <script src="scripts/engine/engine.js"></script>
+    <script src="scripts/core/time-loop.js"></script>
+    <script src="scripts/core/player.js"></script>
+    <script src="scripts/core/npc.js"></script>
+    <script src="scripts/core/dialogue.js"></script>
+    <script src="scripts/core/quest.js"></script>
+    <script src="scripts/core/save-system.js"></script>
+    <script src="scripts/world/world.js"></script>
+    <script src="scripts/ui/ui-manager.js"></script>
+    <script src="scripts/ui/dialogue-ui.js"></script>
+    <script src="scripts/ui/journal-ui.js"></script>
+    <script src="scripts/ui/inventory-ui.js"></script>
+    <script src="scripts/ui/menu-ui.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
