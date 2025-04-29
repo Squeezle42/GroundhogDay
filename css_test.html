@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Loop - Interactive 3D Demo</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- HUD -->
+        <div id="hud">
+            <div id="time-container">
+                <div id="time-display">8:15 AM</div>
+                <div id="day-counter">Day 1</div>
+            </div>
+            <div id="weather-display" class="snowing">Snowing</div>
+            <div class="hud-buttons">
+                <button class="hud-button"><span>Journal</span></button>
+                <button class="hud-button"><span>Inventory</span></button>
+                <button class="hud-button"><span>Menu</span></button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="main-content">
+            <div id="location-header">
+                <h2 id="location-title">Town Square</h2>
+                <p id="location-description">The hub of Groundhog Hollow, currently covered in fresh snow.</p>
+            </div>            <div id="game-view">
+                <!-- 3D Scene Container -->
+                <div id="scene3d-container">
+                    <!-- The scene3d-manager.js will add a canvas and instruction bubbles here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-animation">
+            <img class="guide-animation" src="assets/images/ui/dontpanic.jfif" alt="Guide Animation">
+            <div class="loading-content">
+                <div class="dont-panic">DON'T PANIC</div>
+                <div class="loading-progress">
+                    <div id="loading-bar" style="width: 75%;"></div>
+                </div>
+                <div id="loading-percentage">75%</div>
+                <div id="loading-text">Loading Time Loop...</div>
+                <div id="loading-message">Reality recalibration in progress</div>
+            </div>
+        </div>
+    </div>    <!-- Scripts -->
+    <script src="scripts/engine/scene3d-manager.js"></script>
+    <script>
+        // Demo code to hide loading screen after 3 seconds
+        setTimeout(() => {
+            document.getElementById('loading-screen').classList.add('hidden');
+        }, 3000);
+        
+        // Demo code to add a notification after 5 seconds
+        setTimeout(() => {
+            const notificationContainer = document.createElement('div');
+            notificationContainer.id = 'notification-container';
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification important';
+            notification.textContent = 'CSS refactoring successful!';
+            
+            notificationContainer.appendChild(notification);
+            document.body.appendChild(notificationContainer);
+            
+            // Show a hint notification after 8 seconds
+            setTimeout(() => {
+                const hintNotification = document.createElement('div');
+                hintNotification.className = 'notification quest';
+                hintNotification.textContent = 'Hover over objects in the 3D scene and click to interact!';
+                notificationContainer.appendChild(hintNotification);
+                
+                // Fade out hint after 8 seconds
+                setTimeout(() => {
+                    hintNotification.classList.add('fade-out');
+                }, 8000);
+            }, 3000);
+            
+            // Fade out after 5 seconds
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+            }, 5000);
+        }, 5000);
+    </script>
+</body>
+</html>

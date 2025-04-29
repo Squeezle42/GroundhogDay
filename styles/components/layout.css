@@ -1,0 +1,137 @@
+/**
+ * Time Loop: A Groundhog Day-Inspired Game
+ * 
+ * Copyright (C) 2025 Time Loop Game Development Team
+ */
+
+/* Import variables */
+@import 'variables.css';
+
+/* Game Container */
+#game-container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-bg-dark);
+}
+
+/* Main Content Area */
+#main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    padding: var(--spacing-md);
+    background-color: var(--color-bg-medium);
+}
+
+/* Location header */
+#location-header {
+    padding: var(--spacing-md) var(--spacing-md) 0;
+    margin-bottom: var(--spacing-md);
+}
+
+#location-title {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-light);
+}
+
+#location-description {
+    font-size: var(--font-size-md);
+    color: var(--color-text-muted);
+    max-width: 800px;
+}
+
+/* Game View (where main content is displayed) */
+#game-view {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
+    background-color: var(--color-bg-dark);
+    box-shadow: var(--box-shadow);
+    min-height: 400px;
+}
+
+/* Image view for 2D mode */
+#image-view {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#location-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Interaction area (buttons for 2D mode) */
+#interaction-area {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+}
+
+.button-group {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* Control button - used for toggle buttons and actions */
+.control-button {
+    position: relative;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    text-align: center;
+}
+
+.control-button:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary-light);
+}
+
+/* Responsive Layout */
+@media (max-width: 768px) {
+    #interaction-area {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    #location-header {
+        padding: var(--spacing-sm);
+    }
+    
+    #location-title {
+        font-size: var(--font-size-xl);
+    }
+}
+
+@media (max-width: 480px) {
+    #main-content {
+        padding: var(--spacing-sm);
+    }
+    
+    .button-group {
+        width: 100%;
+        justify-content: center;
+    }
+}

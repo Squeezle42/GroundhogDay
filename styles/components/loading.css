@@ -1,0 +1,103 @@
+/**
+ * Time Loop: A Groundhog Day-Inspired Game
+ * 
+ * Copyright (C) 2025 Time Loop Game Development Team
+ */
+
+/* Import variables */
+@import 'variables.css';
+
+/* Loading Screen */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--color-bg-dark);
+    z-index: var(--z-toast);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity var(--transition-medium);
+}
+
+#loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-animation {
+    text-align: center;
+    max-width: 500px;
+    padding: var(--spacing-xl);
+}
+
+.guide-animation {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: var(--spacing-lg);
+    box-shadow: 0 0 30px rgba(76, 110, 245, 0.6);
+    animation: float 3s ease-in-out infinite;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.dont-panic {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-3xl);
+    color: var(--color-primary-light);
+    margin-bottom: var(--spacing-md);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(76, 110, 245, 0.5);
+}
+
+.loading-progress {
+    height: 8px;
+    background-color: var(--color-bg-light);
+    border-radius: var(--border-radius-full);
+    overflow: hidden;
+    margin: var(--spacing-md) 0;
+    position: relative;
+}
+
+#loading-bar {
+    height: 100%;
+    background-color: var(--color-primary);
+    border-radius: var(--border-radius-full);
+    transition: width var(--transition-medium);
+}
+
+#loading-text {
+    font-size: var(--font-size-md);
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-sm);
+}
+
+#loading-percentage {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    color: var(--color-primary-light);
+    margin-bottom: var(--spacing-sm);
+}
+
+#loading-message {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}

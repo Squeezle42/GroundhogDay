@@ -1,0 +1,114 @@
+/**
+ * Time Loop: A Groundhog Day-Inspired Game
+ * 
+ * Copyright (C) 2025 Time Loop Game Development Team
+ */
+
+/* Import variables */
+@import 'variables.css';
+
+/* Dialogue Container */
+#dialogue-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: var(--spacing-md);
+    display: flex;
+    z-index: 50;
+    border-top: 2px solid var(--color-primary);
+}
+
+/* NPC Portrait */
+.dialogue-portrait {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--border-radius);
+    background-color: var(--color-bg-light);
+    margin-right: var(--spacing-md);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.dialogue-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Dialogue Content */
+.dialogue-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.dialogue-name {
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    color: var(--color-primary-light);
+    margin-bottom: var(--spacing-xs);
+}
+
+.dialogue-text {
+    font-size: var(--font-size-md);
+    line-height: 1.5;
+    color: var(--color-text-light);
+    margin-bottom: var(--spacing-md);
+}
+
+/* Dialogue Choices */
+.dialogue-choices {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-sm);
+}
+
+.dialogue-choice {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.dialogue-choice:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary-light);
+}
+
+/* Dialogue Box (for non-conversation instructions) */
+#dialogue-box {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius);
+    max-width: 80%;
+    z-index: 50;
+    text-align: center;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--color-primary);
+}
+
+#dialogue-box.important {
+    border-color: var(--color-secondary);
+    background-color: rgba(159, 62, 93, 0.8);
+}
+
+/* Character dialogue animation */
+.typing-animation::after {
+    content: '|';
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}

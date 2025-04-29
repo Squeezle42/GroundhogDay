@@ -1,0 +1,139 @@
+/**
+ * Time Loop: A Groundhog Day-Inspired Game
+ * 
+ * Copyright (C) 2025 Time Loop Game Development Team
+ */
+
+/* Import variables */
+@import 'variables.css';
+
+/* HUD Styles */
+#hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: rgba(26, 26, 46, 0.8);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+#time-container {
+    display: flex;
+    align-items: center;
+}
+
+#time-display {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+#day-counter {
+    font-size: 1rem;
+    background-color: var(--color-primary-dark);
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+#weather-display {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+#weather-display:before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#weather-display.snowing:before {
+    background-image: url('../../assets/images/ui/ui_icon_weather_snow.png');
+}
+
+#weather-display.heavy-snow:before {
+    background-image: url('../../assets/images/ui/ui_icon_weather_heavy_snow.png');
+}
+
+#weather-display.sunny:before {
+    background-image: url('../../assets/images/ui/ui_icon_weather_sunny.png');
+}
+
+#weather-display.cloudy:before {
+    background-image: url('../../assets/images/ui/ui_icon_weather_cloudy.png');
+}
+
+.hud-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.hud-button {
+    padding: 5px 12px;
+    font-size: 0.9rem;
+    border-radius: 15px;
+}
+
+/* Notification System */
+#notification-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+}
+
+.notification {
+    padding: 12px 15px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    animation: slide-in 0.3s ease-out;
+    transition: opacity 0.5s ease;
+}
+
+.notification.fade-out {
+    opacity: 0;
+}
+
+.notification.important {
+    background-color: rgba(159, 62, 93, 0.9);
+    border-left: 5px solid var(--color-secondary-light);
+}
+
+.notification.quest {
+    background-color: rgba(30, 58, 138, 0.9);
+    border-left: 5px solid var(--color-primary-light);
+}
+
+.notification.quest-complete {
+    background-color: rgba(20, 110, 60, 0.9);
+    border-left: 5px solid #4ade80;
+}
+
+.notification.discovery {
+    background-color: rgba(79, 143, 186, 0.9);
+    border-left: 5px solid #90cdf4;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

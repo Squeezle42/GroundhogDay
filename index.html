@@ -32,22 +32,33 @@
                 <h1 id="location-title">Hibernation Inn</h1>
                 <p id="location-description">A cozy bed & breakfast where you're staying during your visit to Pinewood Hollow.</p>
             </div>
-            
-            <div id="game-view">
-                <img id="location-image" src="assets/images/locations/loc_inn_morning_snowing.jpg" alt="Hibernation Inn">
-                
-                <div id="interaction-area">
-                    <div id="navigation-buttons" class="button-group">
-                        <!-- Navigation buttons will be added here -->
-                    </div>
+              <div id="game-view">
+                <!-- 2D image view (shown by default) -->
+                <div id="image-view">
+                    <img id="location-image" src="assets/images/locations/loc_inn_morning_snowing.jpg" alt="Hibernation Inn">
                     
-                    <div id="interaction-buttons" class="button-group">
-                        <!-- Interaction buttons will be added here -->
+                    <div id="interaction-area">
+                        <div id="navigation-buttons" class="button-group">
+                            <!-- Navigation buttons will be added here -->
+                        </div>
+                        
+                        <div id="interaction-buttons" class="button-group">
+                            <!-- Interaction buttons will be added here -->
+                        </div>
                     </div>
                 </div>
-                  <div id="dialogue-box" style="display: none;">
+                
+                <!-- 3D scene view (hidden by default, toggled by UI) -->
+                <div id="scene3d-container" style="display: none;">
+                    <!-- The scene3d-manager.js will create a canvas and instruction bubbles here -->
+                </div>
+                
+                <div id="dialogue-box" style="display: none;">
                     <!-- Dialogue content will be added here -->
                 </div>
+                
+                <!-- Toggle button for 2D/3D views -->
+                <button id="toggle-view-mode" class="control-button">Toggle 3D View</button>
             </div>
         </main>
         
@@ -215,9 +226,9 @@
             </div>
         </div>
     </div>
-    
-    <!-- Script Loading -->
+      <!-- Script Loading -->
     <script src="scripts/engine/engine.js"></script>
+    <script src="scripts/engine/scene3d-manager.js"></script>
     <script src="scripts/core/time-loop.js"></script>
     <script src="scripts/core/player.js"></script>
     <script src="scripts/core/npc.js"></script>
@@ -226,10 +237,10 @@
     <script src="scripts/core/save-system.js"></script>
     <script src="scripts/world/world.js"></script>
     <script src="scripts/ui/ui-manager.js"></script>
-    <script src="scripts/ui/dialogue-ui.js"></script>
-    <script src="scripts/ui/journal-ui.js"></script>
+    <script src="scripts/ui/dialogue-ui.js"></script>    <script src="scripts/ui/journal-ui.js"></script>
     <script src="scripts/ui/inventory-ui.js"></script>
     <script src="scripts/ui/menu-ui.js"></script>
+    <script src="scripts/ui/view-manager.js"></script>
     <script src="scripts/main.js"></script>
 </body>
 </html>
