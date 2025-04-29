@@ -31,6 +31,8 @@ We are in the early planning and documentation phase of our Groundhog Day-inspir
 - Focus on original content without direct references to copyrighted material
 - Prioritize maintainable code architecture for complex time loop mechanics
 - Consider performance implications of NPC scheduling systems
+- Apply GNU GPL v3.0 license header to all source code files
+- Ensure compliance with copyleft licensing requirements for code contributions and dependencies
 
 ## Notes for Copilot
 - Please suggest modular approaches to game systems where possible

@@ -4,6 +4,10 @@
 
 A detailed breakdown of development phases and tasks for the Time Loop game project.
 
+## License
+
+This project is licensed under the GNU General Public License v3.0 (GPLv3), a copyleft license that ensures the software and all derivative works remain free and open source.
+
 ### Core Game Systems
 
 * **Time Loop Mechanic:** Central gameplay system where the day repeats
@@ -237,6 +241,24 @@ Ready to begin Phase 1:
 * Tutorial implementation
 * Performance validation across target platforms
 
+### License Implementation
+
+#### Copyleft License (GNU GPL v3.0)
+* **License Header**: Add the GPL license header to all source code files (see `docs/LICENSE_HEADER.txt`)
+* **Third-Party Components**: Track and ensure compliance with all third-party libraries
+* **License Distribution**: Include LICENSE.md with all game distributions
+* **Unreal Engine Considerations**:
+  * Use the Unreal Engine custom license terms compatible with GPL for commercial games
+  * Ensure correct licensing for all Marketplace assets
+  * Document licensing for all incorporated third-party content
+
+#### Unreal Engine License Compliance
+* **Engine Source Access**: Properly handle and document any engine modifications
+* **Plugin Management**: Track license status of all plugins
+* **Asset Store Content**: Maintain documentation of licenses for all assets
+* **Distribution Requirements**: Ensure proper source code access as required by GPL
+* **Contributor License Agreements**: Establish CLAs for external contributors
+
 ### Copilot Assistant Prompt
 
 ```
@@ -262,6 +284,8 @@ I'm developing a time loop adventure game with the following specifications. Hel
 - Implement accessibility features
 - Document all major systems and interfaces
 - Optimize for performance on target platforms
+- Add GPL v3.0 license headers to all code files
+- Ensure license compliance for all third-party components
 
 ## Current Phase:
 [SPECIFY THE CURRENT PHASE FROM THE IMPLEMENTATION TIMELINE]

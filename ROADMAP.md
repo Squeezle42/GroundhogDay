@@ -7,6 +7,18 @@ Early concept development and planning phase.
 - [ ] Game design document finalization
 - [ ] Technology stack selection
 - [ ] Project structure setup
+- [ ] Unreal Engine project initialization
+  - [ ] Basic 3D environment setup
+  - [ ] Development environment configuration
+  - [ ] Source control integration
+- [ ] Core app functionality
+  - [ ] Project builds and runs on target platforms
+  - [ ] Basic player controls implementation
+  - [ ] Camera system setup
+- [ ] Initial 3D environment creation
+  - [ ] Town square prototype
+  - [ ] Player character placeholder model
+  - [ ] Basic environmental assets
 - [ ] Core mechanics prototyping
   - [ ] Basic time loop functionality
   - [ ] Player movement and interaction

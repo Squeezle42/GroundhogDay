@@ -20,7 +20,7 @@ This project is currently in early development. See [ROADMAP.md](ROADMAP.md) for
 *[To be defined as the project structure solidifies]*
 
 ## License
-*[TBD]*
+This project is licensed under the GNU General Public License v3.0 (GPLv3) - a copyleft license that ensures the software and its derivatives remain free and open source. See the [LICENSE](LICENSE.md) file for details.
 
 ## Acknowledgments
 This game is inspired by time loop concepts in fiction while creating an original story and gameplay experience.
