@@ -50,10 +50,25 @@ public:
 	// Save the current game state
 	UFUNCTION(BlueprintCallable, Category = "Time Loop")
 	void SaveGame();
-	
-	// Load the saved game state
+		// Load the saved game state
 	UFUNCTION(BlueprintCallable, Category = "Time Loop")
 	void LoadGame();
+	
+	// Show the game intro sequence
+	UFUNCTION(BlueprintCallable, Category = "Time Loop|Sequence")
+	void StartGameIntroSequence();
+	
+	// Skip the game intro sequence
+	UFUNCTION(BlueprintCallable, Category = "Time Loop|Sequence")
+	void SkipGameIntroSequence();
+	
+	// Show the game ending sequence
+	UFUNCTION(BlueprintCallable, Category = "Time Loop|Sequence")
+	void StartGameEndingSequence();
+	
+	// Called when the game intro sequence is complete
+	UFUNCTION()
+	void OnGameIntroSequenceComplete();
 	
 	// Get the Time Manager
 	UFUNCTION(BlueprintPure, Category = "Time Loop")

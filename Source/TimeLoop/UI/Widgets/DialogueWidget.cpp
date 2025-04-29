@@ -17,12 +17,10 @@
 #include "Components/TextBlock.h"
 #include "Components/VerticalBox.h"
 #include "Components/Button.h"
-#include "UI/TimeLoopHUD.h"
 
 UDialogueWidget::UDialogueWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	// Default dialogue option widget class
 	static ConstructorHelpers::FClassFinder<UUserWidget> DefaultDialogueOptionWidgetClass(TEXT("/Game/UI/Widgets/WBP_DialogueOption"));
 	if (DefaultDialogueOptionWidgetClass.Succeeded())
 	{
@@ -64,7 +62,6 @@ void UDialogueWidget::SetDialogueText(const FText& DialogueText)
 
 void UDialogueWidget::SetDialogueOptions(const TArray<FDialogueOption>& Options)
 {
-	// Clear existing options first
 	ClearDialogueOptions();
 	
 	if (!DialogueOptionsContainer || !DialogueOptionWidgetClass)
@@ -72,29 +69,31 @@ void UDialogueWidget::SetDialogueOptions(const TArray<FDialogueOption>& Options)
 		return;
 	}
 	
-	// Create widgets for each option
 	for (const FDialogueOption& Option : Options)
 	{
 		UUserWidget* OptionWidget = CreateWidget<UUserWidget>(GetOwningPlayer(), DialogueOptionWidgetClass);
 		if (OptionWidget)
 		{
-			// Set the option text
+			// Find the text block and button in the option widget
 			UTextBlock* OptionText = Cast<UTextBlock>(OptionWidget->GetWidgetFromName(TEXT("OptionText")));
+			UButton* OptionButton = Cast<UButton>(OptionWidget->GetWidgetFromName(TEXT("OptionButton")));
+			
 			if (OptionText)
 			{
 				OptionText->SetText(Option.OptionText);
 			}
 			
-			// Bind the button click event
-			UButton* OptionButton = Cast<UButton>(OptionWidget->GetWidgetFromName(TEXT("OptionButton")));
 			if (OptionButton)
 			{
-				FName OptionID = Option.OptionID;
-				OptionButton->OnClicked.AddDynamic(this, &UDialogueWidget::OnDialogueOptionClicked);
-				OptionButton->SetUserFocusDelegate(FGetUserFocus::CreateLambda([OptionID]() { return OptionID; }));
+				// Store the option ID with the button
+				OptionButton->SetVisibility(ESlateVisibility::Visible);
+				
+				// Bind the click event
+				FScriptDelegate ButtonDelegate;
+				ButtonDelegate.BindUFunction(this, FName("OnDialogueOptionClicked"), Option.OptionID);
+				OptionButton->OnClicked.Add(ButtonDelegate);
 			}
 			
-			// Add the option to the container
 			DialogueOptionsContainer->AddChild(OptionWidget);
 		}
 	}
@@ -110,19 +109,8 @@ void UDialogueWidget::ClearDialogueOptions()
 
 void UDialogueWidget::CloseDialogue()
 {
-	// Trigger the OnDialogueClosed delegate
 	OnDialogueClosed.Broadcast();
-	
-	// Get the HUD and hide the dialogue UI
-	APlayerController* PC = GetOwningPlayerController();
-	if (PC)
-	{
-		ATimeLoopHUD* HUD = Cast<ATimeLoopHUD>(PC->GetHUD());
-		if (HUD)
-		{
-			HUD->ShowDialogueUI(false);
-		}
-	}
+	RemoveFromParent();
 }
 
 void UDialogueWidget::OnCloseButtonClicked()
@@ -132,6 +120,5 @@ void UDialogueWidget::OnCloseButtonClicked()
 
 void UDialogueWidget::OnDialogueOptionClicked(FName OptionID)
 {
-	// Trigger the OnDialogueOptionSelected delegate
 	OnDialogueOptionSelected.Broadcast(OptionID);
 }

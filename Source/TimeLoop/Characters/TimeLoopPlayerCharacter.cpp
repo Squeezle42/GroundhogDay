@@ -24,6 +24,7 @@
 // These will need to be implemented separately
 #include "Components/InteractionComponent.h"
 #include "Components/InventoryComponent.h"
+#include "TimeLoop/TimeLoopGameMode.h"
 
 ATimeLoopPlayerCharacter::ATimeLoopPlayerCharacter()
 {
@@ -112,13 +113,13 @@ void ATimeLoopPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Player
     // Set up look bindings
     PlayerInputComponent->BindAxis("LookUp", this, &ATimeLoopPlayerCharacter::LookUp);
     PlayerInputComponent->BindAxis("Turn", this, &ATimeLoopPlayerCharacter::Turn);
-    
-    // Set up action bindings
+      // Set up action bindings
     PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ATimeLoopPlayerCharacter::StartSprinting);
     PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ATimeLoopPlayerCharacter::StopSprinting);
     PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ATimeLoopPlayerCharacter::Interact);
     PlayerInputComponent->BindAction("Journal", IE_Pressed, this, &ATimeLoopPlayerCharacter::ToggleJournal);
     PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &ATimeLoopPlayerCharacter::ToggleInventory);
+    PlayerInputComponent->BindAction("SkipToEnd", IE_Pressed, this, &ATimeLoopPlayerCharacter::SkipToEndSequence);
     
     // Add jump binding
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
@@ -262,6 +263,18 @@ void ATimeLoopPlayerCharacter::ToggleInventory()
     UE_LOG(LogTemp, Warning, TEXT("Player toggled inventory"));
     
     // This will be implemented when the UI system is available
+}
+
+void ATimeLoopPlayerCharacter::SkipToEndSequence()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Player skipped to end sequence"));
+    
+    // Get the game mode and start the ending sequence
+    ATimeLoopGameMode* GameMode = Cast<ATimeLoopGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+    if (GameMode)
+    {
+        GameMode->StartGameEndingSequence();
+    }
 }
 
 void ATimeLoopPlayerCharacter::ModifyEnergyLevel(float Delta)

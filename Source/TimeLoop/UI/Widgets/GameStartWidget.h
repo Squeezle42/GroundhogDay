@@ -20,8 +20,8 @@
 #include "GameStartWidget.generated.h"
 
 /**
- * Widget for displaying game start sequence
- * Shows introduction and sets up the beginning of the time loop
+ * Widget for displaying the game introduction sequence
+ * Shows opening narrative and transitions into gameplay
  */
 UCLASS()
 class TIMELOOP_API UGameStartWidget : public UTimeLoopBaseWidget
@@ -35,77 +35,84 @@ public:
 	virtual void InitializeWidget() override;
 	
 	// Start playing the intro sequence
-	UFUNCTION(BlueprintCallable, Category = "UI|Intro")
+	UFUNCTION(BlueprintCallable, Category = "UI|GameStart")
 	void StartIntroSequence();
 	
 	// Skip the intro sequence
-	UFUNCTION(BlueprintCallable, Category = "UI|Intro")
+	UFUNCTION(BlueprintCallable, Category = "UI|GameStart")
 	void SkipIntroSequence();
 	
+	// Complete the intro sequence
+	UFUNCTION(BlueprintCallable, Category = "UI|GameStart")
+	void CompleteIntroSequence();
+	
 	// Delegate for when the intro sequence is complete
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnIntroCompleteDelegate);
-	UPROPERTY(BlueprintAssignable, Category = "UI|Intro")
-	FOnIntroCompleteDelegate OnIntroComplete;
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnIntroSequenceCompleteDelegate);
+	UPROPERTY(BlueprintAssignable, Category = "UI|GameStart")
+	FOnIntroSequenceCompleteDelegate OnIntroSequenceComplete;
 	
 protected:
 	// The container for intro text
 	UPROPERTY(meta = (BindWidget))
-	class UVerticalBox* IntroContainer;
+	class UVerticalBox* IntroTextContainer;
 	
-	// The intro text blocks
+	// The alarm clock text
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* IntroText1;
+	class UTextBlock* AlarmClockText;
 	
+	// The intro narration text
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* IntroText2;
-	
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* IntroText3;
+	class UTextBlock* NarrationText;
 	
 	// The skip button
 	UPROPERTY(meta = (BindWidget))
 	class UButton* SkipButton;
 	
+	// The continue button
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ContinueButton;
+	
 	// The background image
 	UPROPERTY(meta = (BindWidget))
 	class UImage* BackgroundImage;
 	
-	// The music to play during intro
+	// The radio music to play during intro
 	UPROPERTY(EditDefaultsOnly, Category = "Audio")
 	class USoundBase* IntroMusic;
 	
+	// The alarm clock sound
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	class USoundBase* AlarmSound;
+	
 	// Whether the intro is currently playing
 	bool bIsPlaying;
+	
+	// Current intro step
+	int32 CurrentIntroStep;
+	
+	// Timer handle for intro sequence
+	FTimerHandle IntroSequenceTimerHandle;
 	
 	// Audio component for playing music
 	UPROPERTY()
 	class UAudioComponent* MusicComponent;
 	
-	// Timer handles for intro sequence
-	FTimerHandle IntroText1TimerHandle;
-	FTimerHandle IntroText2TimerHandle;
-	FTimerHandle IntroText3TimerHandle;
-	FTimerHandle IntroCompleteTimerHandle;
-	
 	// Called when the skip button is clicked
 	UFUNCTION()
 	void OnSkipButtonClicked();
 	
-	// Show intro text 1
+	// Called when the continue button is clicked
 	UFUNCTION()
-	void ShowIntroText1();
+	void OnContinueButtonClicked();
 	
-	// Show intro text 2
-	UFUNCTION()
-	void ShowIntroText2();
+	// Advance to the next intro step
+	void AdvanceIntroStep();
 	
-	// Show intro text 3
-	UFUNCTION()
-	void ShowIntroText3();
+	// Set up the intro text sequences
+	void SetupIntroSequences();
 	
-	// Complete the intro sequence
-	UFUNCTION()
-	void CompleteIntroSequence();
+	// Array of intro text sequences
+	TArray<FText> IntroSequences;
 	
 	// Called when the widget is constructed
 	virtual void NativeConstruct() override;

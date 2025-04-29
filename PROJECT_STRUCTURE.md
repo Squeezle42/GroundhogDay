@@ -9,6 +9,9 @@
 ├── GROUNDHOGDAY.md            # Detailed game design document
 ├── GroundhogDayGameDev.md     # Initial concept document
 └── docs/                      # Additional documentation
+    ├── CREDITS.md             # Comprehensive source attribution (ALWAYS MAINTAIN)
+    ├── SOURCE_ATTRIBUTION_GUIDELINES.md  # Guidelines for crediting sources
+    ├── SOURCE_ATTRIBUTION_TEMPLATE.md    # Template for credits documentation
     ├── design/                # Design documents
     │   ├── characters/        # Character design docs
     │   ├── locations/         # Location design docs
@@ -19,81 +22,81 @@
     │   └── requirements/      # Technical requirements
     └── art/                   # Art guides and references
         ├── concept/           # Concept art
-        ├── style_guides/      # Art style documentation
-        └── audio/             # Audio design documents
 ```
 
-## Game Implementation (Engine-Agnostic Structure)
+## Source Code
 ```
 /
-├── src/                       # Source code
-│   ├── core/                  # Core game systems
-│   │   ├── time_loop/         # Time loop mechanics
-│   │   ├── player/            # Player character systems
-│   │   ├── npc/               # NPC systems
-│   │   ├── dialogue/          # Dialogue system
-│   │   ├── quest/             # Quest system
-│   │   ├── inventory/         # Inventory system
-│   │   └── save/              # Save/load system
-│   ├── world/                 # World-related code
-│   │   ├── locations/         # Location implementations
-│   │   ├── weather/           # Weather system
-│   │   ├── day_night/         # Day/night cycle
-│   │   └── events/            # World events
-│   ├── ui/                    # User interface code
-│   │   ├── menus/             # Game menus
-│   │   ├── hud/               # In-game HUD
-│   │   └── journal/           # Journal interface
-│   └── utils/                 # Utility code and helpers
-├── assets/                    # Game assets
-│   ├── models/                # 3D models
-│   ├── textures/              # Texture files
-│   ├── animations/            # Animation files
-│   ├── audio/                 # Audio assets
-│   │   ├── music/             # Music tracks
-│   │   ├── sfx/               # Sound effects
-│   │   └── dialogue/          # Voice acting
-│   ├── fonts/                 # Font files
-│   └── ui/                    # UI assets
-├── data/                      # Game data files
-│   ├── characters/            # Character data
-│   ├── dialogue/              # Dialogue trees
-│   ├── quests/                # Quest definitions
-│   ├── items/                 # Item definitions
-│   └── locations/             # Location data
-└── tests/                     # Test code
-    ├── unit/                  # Unit tests
-    └── integration/           # Integration tests
+└── Source/                    # Unreal Engine project source code
+    ├── TimeLoop/              # Main game module
+    │   ├── TimeLoopGameMode.cpp/.h        # Game mode classes
+    │   ├── Characters/        # Character classes
+    │   ├── Components/        # Component classes
+    │   ├── Environment/       # Environment classes
+    │   ├── Systems/           # Game systems
+    │   │   ├── CharacterSystem/  # NPC and character management
+    │   │   ├── DialogueSystem/   # Dialogue management
+    │   │   ├── QuestSystem/      # Quest management
+    │   │   └── TimeSystem/       # Time loop mechanics
+    │   ├── Testing/           # Test frameworks
+    │   └── UI/                # UI elements
+    │       ├── Widgets/       # UI widget classes
+    │       └── TimeLoopHUD.cpp/.h  # HUD classes
+    └── Config/                # Engine configuration
 ```
 
-## Engine-Specific Structure (Unity Example)
+## Assets
 ```
 /
-├── Assets/
-│   ├── Scripts/               # C# scripts
-│   │   ├── Core/              # Core systems
-│   │   ├── Characters/        # Character scripts
-│   │   ├── Dialogue/          # Dialogue system
-│   │   ├── TimeLoop/          # Time loop mechanics
-│   │   ├── Quests/            # Quest system
-│   │   └── UI/                # User interface scripts
-│   ├── Prefabs/               # Prefabricated game objects
-│   │   ├── Characters/        # Character prefabs
-│   │   ├── Environment/       # Environment prefabs
-│   │   ├── UI/                # UI prefabs
-│   │   └── Effects/           # Visual effects prefabs
-│   ├── Scenes/                # Game scenes
-│   │   ├── MainMenu/          # Main menu scene
-│   │   ├── Town/              # Town scene
-│   │   └── Interiors/         # Building interior scenes
-│   ├── Models/                # 3D models
-│   ├── Textures/              # Texture files
-│   ├── Materials/             # Material files
-│   ├── Animations/            # Animation files
-│   ├── Audio/                 # Audio assets
-│   └── StreamingAssets/       # Stream-loaded assets
-├── ProjectSettings/           # Unity project settings
-└── Packages/                  # Unity packages
+└── assets/                    # Project assets
+    ├── audio/                 # Audio assets
+    │   ├── music/             # Music files
+    │   └── sfx/               # Sound effects
+    └── images/                # Visual assets
+        ├── characters/        # Character images
+        ├── items/             # Item images
+        ├── locations/         # Location images
+        └── ui/                # UI elements
 ```
 
-This structure provides a foundation that can be adapted based on your chosen game engine and specific implementation needs.
+## Data
+```
+/
+└── data/                      # Game data files
+    ├── dialogue/              # Dialogue scripts
+    └── quests/                # Quest definitions
+```
+
+## Web Infrastructure
+```
+/
+├── index.html                 # Main HTML file
+├── scripts/                   # JavaScript files
+│   ├── core/                  # Core functionality
+│   ├── engine/                # Game engine
+│   ├── ui/                    # UI management
+│   └── world/                 # World management
+└── styles/                    # CSS files
+```
+
+## Important Notes
+
+### Source Attribution & Credits
+All projects MUST maintain comprehensive source attribution in the following files:
+1. `docs/CREDITS.md` - Detailed attribution of all sources
+2. `README.md` - Brief credits section with link to CREDITS.md
+3. In-game credits screen
+
+Use the `docs/SOURCE_ATTRIBUTION_TEMPLATE.md` as a guide and follow the guidelines in `docs/SOURCE_ATTRIBUTION_GUIDELINES.md`. Proper source attribution is a non-negotiable requirement for all projects.
+
+### Documentation First
+For each major feature:
+1. Document the design before implementation
+2. Update documentation as implementation progresses
+3. Ensure final documentation matches the implemented feature
+
+### Testing
+All features should include:
+1. Unit tests where applicable
+2. Integration tests for system interactions
+3. Documentation for manual testing procedures

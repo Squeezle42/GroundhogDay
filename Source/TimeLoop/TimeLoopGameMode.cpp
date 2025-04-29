@@ -20,11 +20,15 @@
 #include "Systems/DialogueSystem/DialogueManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Systems/TimeSystem/TimeLoopSaveGame.h"
+#include "UI/TimeLoopHUD.h"
 
 ATimeLoopGameMode::ATimeLoopGameMode()
 {
 	// Set this game mode to call Tick() every frame
 	PrimaryActorTick.bCanEverTick = true;
+	
+	// Set default classes
+	HUDClass = ATimeLoopHUD::StaticClass();
 }
 
 void ATimeLoopGameMode::BeginPlay()
@@ -33,6 +37,9 @@ void ATimeLoopGameMode::BeginPlay()
 	
 	// Initialize all game systems
 	InitializeGameSystems();
+	
+	// Start with the game intro sequence
+	StartGameIntroSequence();
 	
 	UE_LOG(LogTemp, Warning, TEXT("Time Loop Game Mode: Begin Play"));
 }
@@ -184,5 +191,93 @@ void ATimeLoopGameMode::LoadGame()
 			
 			UE_LOG(LogTemp, Warning, TEXT("Time Loop Game Mode: Game Loaded"));
 		}
+	}
+}
+
+void ATimeLoopGameMode::StartGameIntroSequence()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Time Loop Game Mode: Starting Game Intro Sequence"));
+	
+	// Get the player controller
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!PC)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Time Loop Game Mode: Failed to get player controller"));
+		return;
+	}
+	
+	// Get the HUD
+	ATimeLoopHUD* HUD = PC->GetHUD<ATimeLoopHUD>();
+	if (HUD)
+	{
+		HUD->ShowGameStart();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Time Loop Game Mode: Failed to get TimeLoopHUD"));
+	}
+}
+
+void ATimeLoopGameMode::SkipGameIntroSequence()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Time Loop Game Mode: Skipping Game Intro Sequence"));
+	
+	// Get the player controller
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!PC)
+	{
+		return;
+	}
+	
+	// Get the HUD
+	ATimeLoopHUD* HUD = PC->GetHUD<ATimeLoopHUD>();
+	if (HUD)
+	{
+		HUD->SkipGameStart();
+	}
+}
+
+void ATimeLoopGameMode::StartGameEndingSequence()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Time Loop Game Mode: Starting Game Ending Sequence"));
+	
+	// Get the player controller
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!PC)
+	{
+		return;
+	}
+	
+	// Get the HUD
+	ATimeLoopHUD* HUD = PC->GetHUD<ATimeLoopHUD>();
+	if (HUD)
+	{
+		// Show the ending credits with special thanks to Bill Murray and Chris Hadfield
+		HUD->ShowEndGameCredits();
+	}
+}
+
+void ATimeLoopGameMode::OnGameIntroSequenceComplete()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Time Loop Game Mode: Game Intro Sequence Complete"));
+	
+	// Start the actual gameplay
+	// For our current implementation, we'll immediately jump to the ending
+	// This will be replaced with actual gameplay in future versions
+	
+	// Get the player controller
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!PC)
+	{
+		return;
+	}
+	
+	// Get the HUD
+	ATimeLoopHUD* HUD = PC->GetHUD<ATimeLoopHUD>();
+	if (HUD)
+	{
+		// Show the game HUD
+		// In a full game, we would start regular gameplay here
+		// For now, we'll add a key binding to trigger the ending
 	}
 }

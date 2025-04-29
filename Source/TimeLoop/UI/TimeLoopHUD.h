@@ -102,10 +102,13 @@ protected:
 		// The class to use for the dialogue widget
 	UPROPERTY(EditDefaultsOnly, Category = "UI|Classes")
 	TSubclassOf<UDialogueWidget> DialogueWidgetClass;
-	
-	// The class to use for the end game credits widget
+		// The class to use for the end game credits widget
 	UPROPERTY(EditDefaultsOnly, Category = "UI|Classes")
 	TSubclassOf<UEndGameCreditsWidget> EndGameCreditsWidgetClass;
+	
+	// The class to use for the game start widget
+	UPROPERTY(EditDefaultsOnly, Category = "UI|Classes")
+	TSubclassOf<UGameStartWidget> GameStartWidgetClass;
 
 private:
 	// The active game HUD widget instance
@@ -128,7 +131,14 @@ private:
 	UPROPERTY()
 	UEndGameCreditsWidget* EndGameCreditsWidget;
 	
-	// Initialize a widget of the specified class and add it to the viewport
+	// The game start widget instance
+	UPROPERTY()
+	UGameStartWidget* GameStartWidget;
+		// Initialize a widget of the specified class and add it to the viewport
 	template<typename T>
 	T* CreateWidget(TSubclassOf<T> WidgetClass, bool bAddToViewport = true);
+	
+	// Called when the game start sequence is complete
+	UFUNCTION()
+	void OnGameStartComplete();
 };

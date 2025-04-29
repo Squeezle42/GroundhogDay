@@ -70,9 +70,11 @@ public:
     
     // Journal toggle input handler
     void ToggleJournal();
-    
-    // Inventory toggle input handler
+      // Inventory toggle input handler
     void ToggleInventory();
+    
+    // Skip to end sequence input handler (temporary for demo)
+    void SkipToEndSequence();
     
     // Check if the player is interacting with something
     UFUNCTION(BlueprintPure, Category = "Interaction")

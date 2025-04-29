@@ -3,6 +3,11 @@
 ## Game Concept
 "Time Loop" is a narrative-driven adventure game that puts players in the shoes of a character trapped in an endlessly repeating day in a small winter town. This document explores the detailed design elements that will bring this concept to life.
 
+## Development Status
+**Current Implementation:** The game currently includes a complete introduction sequence and ending credits. Players can press the [End] key at any time to skip to the ending sequence. The middle portions of gameplay will be implemented in future updates.
+
+**Special Credits:** The game features special thanks to Bill Murray for his iconic performance in "Groundhog Day," and includes Chris Hadfield's rendition of "Rocket Man" during the end credits.
+
 ## Time Loop Mechanics
 
 ### Loop Structure

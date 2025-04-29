@@ -20,6 +20,7 @@
 #include "UI/Widgets/InventoryWidget.h"
 #include "UI/Widgets/DialogueWidget.h"
 #include "UI/Widgets/EndGameCreditsWidget.h"
+#include "UI/Widgets/GameStartWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 ATimeLoopHUD::ATimeLoopHUD()
@@ -47,11 +48,16 @@ ATimeLoopHUD::ATimeLoopHUD()
 	{
 		DialogueWidgetClass = DialogueWidgetClassFinder.Class;
 	}
-	
-	static ConstructorHelpers::FClassFinder<UEndGameCreditsWidget> EndGameCreditsWidgetClassFinder(TEXT("/Game/UI/Widgets/WBP_EndGameCredits"));
+		static ConstructorHelpers::FClassFinder<UEndGameCreditsWidget> EndGameCreditsWidgetClassFinder(TEXT("/Game/UI/Widgets/WBP_EndGameCredits"));
 	if (EndGameCreditsWidgetClassFinder.Succeeded())
 	{
 		EndGameCreditsWidgetClass = EndGameCreditsWidgetClassFinder.Class;
+	}
+	
+	static ConstructorHelpers::FClassFinder<UGameStartWidget> GameStartWidgetClassFinder(TEXT("/Game/UI/Widgets/WBP_GameStart"));
+	if (GameStartWidgetClassFinder.Succeeded())
+	{
+		GameStartWidgetClass = GameStartWidgetClassFinder.Class;
 	}
 }
 
@@ -61,11 +67,12 @@ void ATimeLoopHUD::BeginPlay()
 	
 	// Create the game HUD widget first (always visible)
 	GameHUDWidget = CreateWidget<UGameHUDWidget>(GameHUDWidgetClass);
-		// Create other widgets but don't add them to viewport yet
+	// Create other widgets but don't add them to viewport yet
 	MainMenuWidget = CreateWidget<UMainMenuWidget>(MainMenuWidgetClass, false);
 	InventoryWidget = CreateWidget<UInventoryWidget>(InventoryWidgetClass, false);
 	DialogueWidget = CreateWidget<UDialogueWidget>(DialogueWidgetClass, false);
 	EndGameCreditsWidget = CreateWidget<UEndGameCreditsWidget>(EndGameCreditsWidgetClass, false);
+	GameStartWidget = CreateWidget<UGameStartWidget>(GameStartWidgetClass, false);
 }
 
 void ATimeLoopHUD::DrawHUD()
@@ -200,6 +207,65 @@ void ATimeLoopHUD::ShowEndGameCredits()
 				PC->SetShowMouseCursor(true);
 			}
 		}
+	}
+}
+
+void ATimeLoopHUD::ShowGameStart()
+{
+	if (GameStartWidget)
+	{
+		// Hide any other UI elements first
+		if (GameHUDWidget && GameHUDWidget->IsInViewport())
+		{
+			GameHUDWidget->RemoveFromParent();
+		}
+		
+		// Show the game start sequence
+		if (!GameStartWidget->IsInViewport())
+		{
+			GameStartWidget->AddToViewport();
+			GameStartWidget->StartIntroSequence();
+			
+			// Set UI input mode
+			APlayerController* PC = GetOwningPlayerController();
+			if (PC)
+			{
+				PC->SetInputMode(FInputModeGameAndUI());
+				PC->SetShowMouseCursor(false);
+			}
+			
+			// Bind to the intro complete event
+			if (!GameStartWidget->OnIntroSequenceComplete.IsAlreadyBound(this, &ATimeLoopHUD::OnGameStartComplete))
+			{
+				GameStartWidget->OnIntroSequenceComplete.AddDynamic(this, &ATimeLoopHUD::OnGameStartComplete);
+			}
+		}
+	}
+}
+
+void ATimeLoopHUD::SkipGameStart()
+{
+	if (GameStartWidget && GameStartWidget->IsInViewport())
+	{
+		GameStartWidget->SkipIntroSequence();
+	}
+}
+
+UFUNCTION()
+void ATimeLoopHUD::OnGameStartComplete()
+{
+	// Show the game HUD
+	if (GameHUDWidget && !GameHUDWidget->IsInViewport())
+	{
+		GameHUDWidget->AddToViewport();
+	}
+	
+	// Set game input mode
+	APlayerController* PC = GetOwningPlayerController();
+	if (PC)
+	{
+		PC->SetInputMode(FInputModeGameOnly());
+		PC->SetShowMouseCursor(false);
 	}
 }
 

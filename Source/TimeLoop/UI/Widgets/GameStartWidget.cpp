@@ -24,12 +24,20 @@
 UGameStartWidget::UGameStartWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, bIsPlaying(false)
+	, CurrentIntroStep(0)
 {
 	// Load intro music
-	static ConstructorHelpers::FObjectFinder<USoundBase> DefaultIntroMusic(TEXT("/Game/Audio/Music/IntroMusic"));
+	static ConstructorHelpers::FObjectFinder<USoundBase> DefaultIntroMusic(TEXT("/Game/Audio/Music/MorningRadio"));
 	if (DefaultIntroMusic.Succeeded())
 	{
 		IntroMusic = DefaultIntroMusic.Object;
+	}
+	
+	// Load alarm sound
+	static ConstructorHelpers::FObjectFinder<USoundBase> DefaultAlarmSound(TEXT("/Game/Audio/SFX/AlarmClock"));
+	if (DefaultAlarmSound.Succeeded())
+	{
+		AlarmSound = DefaultAlarmSound.Object;
 	}
 }
 
@@ -37,23 +45,13 @@ void UGameStartWidget::InitializeWidget()
 {
 	Super::InitializeWidget();
 	
-	// Set the intro texts
-	if (IntroText1)
-	{
-		IntroText1->SetText(FText::FromString("February 2nd, Groundhog Day..."));
-		IntroText1->SetVisibility(ESlateVisibility::Hidden);
-	}
+	// Set up intro sequences
+	SetupIntroSequences();
 	
-	if (IntroText2)
+	// Hide the continue button initially
+	if (ContinueButton)
 	{
-		IntroText2->SetText(FText::FromString("You wake up to the same day, over and over again..."));
-		IntroText2->SetVisibility(ESlateVisibility::Hidden);
-	}
-	
-	if (IntroText3)
-	{
-		IntroText3->SetText(FText::FromString("Can you break the time loop and escape?"));
-		IntroText3->SetVisibility(ESlateVisibility::Hidden);
+		ContinueButton->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
@@ -61,11 +59,15 @@ void UGameStartWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	// Bind skip button click event
+	// Bind button click events
 	if (SkipButton)
 	{
 		SkipButton->OnClicked.AddDynamic(this, &UGameStartWidget::OnSkipButtonClicked);
-		SkipButton->SetVisibility(ESlateVisibility::Hidden); // Initially hidden
+	}
+	
+	if (ContinueButton)
+	{
+		ContinueButton->OnClicked.AddDynamic(this, &UGameStartWidget::OnContinueButtonClicked);
 	}
 }
 
@@ -73,21 +75,33 @@ void UGameStartWidget::NativeDestruct()
 {
 	Super::NativeDestruct();
 	
+	// Stop any timers
+	if (GetWorld())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(IntroSequenceTimerHandle);
+	}
+	
 	// Stop the music if it's playing
 	if (MusicComponent)
 	{
 		MusicComponent->Stop();
 		MusicComponent = nullptr;
 	}
+}
+
+void UGameStartWidget::SetupIntroSequences()
+{
+	// Initial sequence - clock display
+	IntroSequences.Add(FText::FromString("6:00 AM"));
 	
-	// Clear any timers
-	if (GetWorld())
-	{
-		GetWorld()->GetTimerManager().ClearTimer(IntroText1TimerHandle);
-		GetWorld()->GetTimerManager().ClearTimer(IntroText2TimerHandle);
-		GetWorld()->GetTimerManager().ClearTimer(IntroText3TimerHandle);
-		GetWorld()->GetTimerManager().ClearTimer(IntroCompleteTimerHandle);
-	}
+	// Introduction narrations
+	IntroSequences.Add(FText::FromString("*BEEP* *BEEP* *BEEP*"));
+	IntroSequences.Add(FText::FromString("You reach over and slap the alarm clock."));
+	IntroSequences.Add(FText::FromString("Another day in Groundhog Hollow..."));
+	IntroSequences.Add(FText::FromString("Wait, didn't you just live this exact same morning yesterday?"));
+	IntroSequences.Add(FText::FromString("The radio plays the same song. The announcer says the same words."));
+	IntroSequences.Add(FText::FromString("\"It's Groundhog Day, folks! The annual festival begins today!\""));
+	IntroSequences.Add(FText::FromString("You have a strange feeling that something isn't right..."));
 }
 
 void UGameStartWidget::StartIntroSequence()
@@ -98,65 +112,99 @@ void UGameStartWidget::StartIntroSequence()
 	}
 	
 	bIsPlaying = true;
+	CurrentIntroStep = 0;
 	
-	// Show the skip button
-	if (SkipButton)
+	// Play the alarm sound
+	if (AlarmSound)
 	{
-		SkipButton->SetVisibility(ESlateVisibility::Visible);
+		UGameplayStatics::PlaySound2D(this, AlarmSound);
 	}
 	
-	// Play the intro music
-	if (IntroMusic)
+	// Start the intro music after a short delay
+	FTimerHandle MusicTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(MusicTimerHandle, [this]()
 	{
-		MusicComponent = UGameplayStatics::CreateSound2D(this, IntroMusic);
-		if (MusicComponent)
+		if (IntroMusic)
 		{
-			MusicComponent->Play();
+			MusicComponent = UGameplayStatics::CreateSound2D(this, IntroMusic);
+			if (MusicComponent)
+			{
+				MusicComponent->Play();
+			}
 		}
-	}
+	}, 3.0f, false);
 	
-	// Set timers for the intro sequence
-	if (GetWorld())
+	// Display the first intro step
+	AdvanceIntroStep();
+}
+
+void UGameStartWidget::AdvanceIntroStep()
+{
+	if (CurrentIntroStep < IntroSequences.Num())
 	{
-		GetWorld()->GetTimerManager().SetTimer(IntroText1TimerHandle, this, &UGameStartWidget::ShowIntroText1, 2.0f, false);
-		GetWorld()->GetTimerManager().SetTimer(IntroText2TimerHandle, this, &UGameStartWidget::ShowIntroText2, 6.0f, false);
-		GetWorld()->GetTimerManager().SetTimer(IntroText3TimerHandle, this, &UGameStartWidget::ShowIntroText3, 10.0f, false);
-		GetWorld()->GetTimerManager().SetTimer(IntroCompleteTimerHandle, this, &UGameStartWidget::CompleteIntroSequence, 14.0f, false);
+		FText CurrentText = IntroSequences[CurrentIntroStep];
+		
+		// Display the text in the appropriate text block
+		if (CurrentIntroStep == 0)
+		{
+			if (AlarmClockText)
+			{
+				AlarmClockText->SetText(CurrentText);
+				AlarmClockText->SetVisibility(ESlateVisibility::Visible);
+			}
+		}
+		else
+		{
+			if (NarrationText)
+			{
+				NarrationText->SetText(CurrentText);
+			}
+		}
+		
+		// Advance to the next step after a delay
+		float Delay = 3.0f;
+		GetWorld()->GetTimerManager().SetTimer(IntroSequenceTimerHandle, this, &UGameStartWidget::AdvanceIntroStep, Delay, false);
+		
+		CurrentIntroStep++;
+	}
+	else
+	{
+		// End of the sequence, show the continue button
+		if (ContinueButton)
+		{
+			ContinueButton->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 }
 
 void UGameStartWidget::SkipIntroSequence()
 {
-	// Clear any timers
+	// Stop any timers
 	if (GetWorld())
 	{
-		GetWorld()->GetTimerManager().ClearTimer(IntroText1TimerHandle);
-		GetWorld()->GetTimerManager().ClearTimer(IntroText2TimerHandle);
-		GetWorld()->GetTimerManager().ClearTimer(IntroText3TimerHandle);
-		GetWorld()->GetTimerManager().ClearTimer(IntroCompleteTimerHandle);
+		GetWorld()->GetTimerManager().ClearTimer(IntroSequenceTimerHandle);
 	}
 	
-	// Show all text at once before completing
-	if (IntroText1)
+	// Stop the music
+	if (MusicComponent)
 	{
-		IntroText1->SetVisibility(ESlateVisibility::Visible);
+		MusicComponent->Stop();
+		MusicComponent = nullptr;
 	}
 	
-	if (IntroText2)
-	{
-		IntroText2->SetVisibility(ESlateVisibility::Visible);
-	}
+	// Complete the intro sequence
+	CompleteIntroSequence();
+}
+
+void UGameStartWidget::CompleteIntroSequence()
+{
+	bIsPlaying = false;
 	
-	if (IntroText3)
-	{
-		IntroText3->SetVisibility(ESlateVisibility::Visible);
-	}
+	// Broadcast that the intro sequence is complete
+	OnIntroSequenceComplete.Broadcast();
 	
-	// Complete the sequence after a short delay
-	if (GetWorld())
-	{
-		GetWorld()->GetTimerManager().SetTimer(IntroCompleteTimerHandle, this, &UGameStartWidget::CompleteIntroSequence, 1.0f, false);
-	}
+	// Remove from viewport
+	RemoveFromParent();
 }
 
 void UGameStartWidget::OnSkipButtonClicked()
@@ -164,37 +212,7 @@ void UGameStartWidget::OnSkipButtonClicked()
 	SkipIntroSequence();
 }
 
-void UGameStartWidget::ShowIntroText1()
+void UGameStartWidget::OnContinueButtonClicked()
 {
-	if (IntroText1)
-	{
-		IntroText1->SetVisibility(ESlateVisibility::Visible);
-	}
-}
-
-void UGameStartWidget::ShowIntroText2()
-{
-	if (IntroText2)
-	{
-		IntroText2->SetVisibility(ESlateVisibility::Visible);
-	}
-}
-
-void UGameStartWidget::ShowIntroText3()
-{
-	if (IntroText3)
-	{
-		IntroText3->SetVisibility(ESlateVisibility::Visible);
-	}
-}
-
-void UGameStartWidget::CompleteIntroSequence()
-{
-	bIsPlaying = false;
-	
-	// Trigger the OnIntroComplete delegate
-	OnIntroComplete.Broadcast();
-	
-	// Remove the widget from the viewport
-	RemoveFromParent();
+	CompleteIntroSequence();
 }
