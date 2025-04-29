@@ -1,0 +1,13 @@
+# Hitchhiker's Guide Animation Placeholder
+
+This file is a placeholder for the animation that should be displayed on the loading screen.
+
+Please create an image named `hitchhiker_guide.png` and place it in this directory.
+
+The image should be:
+- Size: 256x256px or 512x512px recommended
+- Format: PNG with transparency
+- Content: An animated or static "Hitchhiker's Guide to the Galaxy" themed image
+  (A book with "Don't Panic" on the cover, or a thumb/hitchhiker icon would be great)
+
+Once you've created the image, you can delete this placeholder file.

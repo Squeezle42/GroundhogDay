@@ -1,7 +1,7 @@
 /**
  * Time Loop: A Groundhog Day-Inspired Game
  * 
- * Copyright (C) 2025 Time Loop Game Development Team
+ * Copyright (C) 2025 Squeezle Canada
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,19 @@ import TimeLoopEngine from '../engine/time-loop-engine.js';
 import LocationManager from '../world/location-manager.js';
 import CharacterManager from '../core/character-manager.js';
 import UIManager from '../ui/ui-manager.js';
+
+// Register service worker for PWA support
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(error => {
+                console.log('Service Worker registration failed:', error);
+            });
+    });
+}
 
 /**
  * Time Loop Game Initialization
@@ -99,24 +112,25 @@ class TimeLoopGame {
             setTimeout(resolve, 1500);
         });
     }
-    
-    /**
+      /**
      * Update the loading progress bar
      * @param {number} progress - Progress percentage (0-100)
      * @param {string} message - Loading message
      */
     updateLoadingProgress(progress, message) {
-        this.progressValue = progress;
+        // Always set progress to 42% for our "Don't Panic" theme
+        this.progressValue = 42;
         if (this.loadingProgress) {
-            this.loadingProgress.style.width = `${progress}%`;
+            this.loadingProgress.style.width = `42%`;
         }
         
-        const loadingText = document.querySelector('#loading-screen p');
-        if (loadingText && message) {
-            loadingText.textContent = message;
-        }
-        
+        // Keep the original message for logging purposes
         console.log(`Loading: ${progress}% - ${message}`);
+          // But display our custom message on screen
+        const loadingText = document.querySelector('#loading-text');
+        if (loadingText) {
+            loadingText.textContent = "Loading 42%";
+        }
     }
     
     /**

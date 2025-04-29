@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+<head>    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time Loop - A Groundhog Day-Inspired Game</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="icon" href="assets/images/favicon.ico">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
     <meta name="description" content="A narrative adventure game where you're trapped in an endlessly repeating day in a small winter town.">
 </head>
 <body>
@@ -44,42 +45,27 @@
                         <!-- Interaction buttons will be added here -->
                     </div>
                 </div>
-                
-                <div id="dialogue-box" style="display: none;">
+                  <div id="dialogue-box" style="display: none;">
                     <!-- Dialogue content will be added here -->
                 </div>
             </div>
         </main>
-    </div>
-    
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="loading-content">
-            <h2>Time Loop</h2>
-            <p>Loading...</p>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Scripts -->
-    <script type="module" src="scripts/core/main.js"></script>
-</body>
-    <div id="game-container">
+        
         <!-- Game Canvas -->
         <canvas id="game-canvas"></canvas>
         
         <!-- Loading Screen -->
-        
         <div id="loading-screen">
             <div class="loading-animation">
-            <div class="loading-content">
-                <h1>Time Loop</h1>
-                <div class="loading-progress">
-                    <div id="loading-bar"></div>
+                <img src="assets/images/ui/dontpanic.jfif" alt="Don't Panic Guide" class="guide-animation">                <div class="loading-content">
+                    <h1 class="dont-panic">DON'T PANIC</h1>
+                    <div class="loading-progress">
+                        <div id="loading-bar" style="width: 42%;"></div>
+                    </div>
+                    <p id="loading-text">Loading 42%</p>
+                    <p id="loading-percentage">42%</p>
+                    <p id="loading-message">Loading game assets...</p>          
                 </div>
-                <p id="loading-text">If it's still loading you win...</p>
             </div>
         </div>
         
