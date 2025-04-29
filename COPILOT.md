@@ -1,124 +1,121 @@
-# Time Loop: Development Guide
+# Time Loop Game Development - Copilot Assistance
 
-## Current Status (April 2025)
-We are at the beginning of Phase 1 (Foundation) as outlined in our roadmap. The focus is on setting up the core Unreal Engine systems for our time loop game.
+## Current Progress
 
-## Project Overview
-"Time Loop" is a narrative-driven adventure game where the player character, Morgan Chase, is trapped in a time loop in the small town of Pinewood Hollow. The game focuses on exploration, relationship building, puzzle-solving, and personal growth as Morgan attempts to break free from the loop.
+We've set up the foundational Unreal Engine systems for the Time Loop game based on the project roadmap. The initial implementation focuses on creating the core C++ classes that will power our game mechanics, particularly the time loop functionality.
 
-## Current Development Focus: Unreal Engine Core Systems
-We are currently focused on implementing the foundation of our game in Unreal Engine 5.2 with the following core systems:
+## Core Systems Implemented
 
-### 1. Time System
-- Time management (game clock, day progression)
-- Day/night cycle framework
-- Time loop reset mechanism
-- Persistent knowledge tracking
+1. **TimeLoopGameMode**
+   - Central coordinator for all game systems
+   - Handles initialization, saving, loading, and time loop resets
+   - Manages references to all subsystems
 
-### 2. Character System
-- Player character controller
-- NPC base class
-- NPC scheduling framework
-- Character interaction system
+2. **Time System**
+   - `TimeManager`: Handles game time progression, day/night cycles, and loop transitions
+   - `TimeLoopSaveGame`: Manages persistent data across time loops
 
-### 3. World System
-- Town location management
-- Weather system
-- Interactive objects framework
-- Environment state tracking
+3. **Character System**
+   - `NPCScheduler`: Controls NPC schedules, daily routines, and relationship values
+   - `NPCCharacter`: Base character class for all NPCs with interaction capabilities
 
-### 4. Dialogue System
-- Dialogue manager
-- Conversation tree structure
-- Knowledge-based dialogue options
-- Relationship tracking
+4. **Quest System**
+   - `QuestManager`: Tracks quest state, objectives, and player knowledge
+   - Handles persistent vs. non-persistent quest progress across loops
 
-### 5. Quest System
-- Quest manager
-- Quest state tracking
-- Time loop-aware quest progression
-- Event trigger system
+5. **Dialogue System**
+   - `DialogueManager`: Manages NPC conversations and dialogue trees
+   - Support for conditional dialogue based on player knowledge
 
-### 6. Save/Load System
-- Game state serialization
-- Cross-loop persistence
-- Player knowledge retention
+## Next Steps
 
-## Implementation Steps
+### 1. Create the Player Character
 
-### Phase 1.1: Project Setup (Current Focus)
-1. ✅ Define project structure and architecture
-2. ✅ Create documentation for systems and requirements
-3. ⏩ Initialize Unreal Engine project with correct settings
-4. ⏩ Set up version control (Git + LFS)
-5. ⏩ Implement basic directory structure in Unreal
+- Implement `ATimeLoopPlayerCharacter` extending from `ACharacter`
+- Add interaction system for detecting and interacting with NPCs and objects
+- Implement player inventory system
+- Set up camera controls and player input
 
-### Phase 1.2: Core Framework Implementation
-1. ⏩ Create base C++ classes for core systems
-2. ⏩ Implement TimeManager class
-3. ⏩ Set up player character controller
-4. ⏩ Create world/level framework for town
-5. ⏩ Implement basic time loop reset
+### 2. Develop the Environment and World State System
 
-### Phase 1.3: Basic Gameplay Prototype
-1. ⏩ Create placeholder town square environment
-2. ⏩ Implement player movement and interaction
-3. ⏩ Add simple NPC with basic daily schedule
-4. ⏩ Create time UI elements (clock, day counter)
-5. ⏩ Test basic loop reset functionality
+- Create `ULocationManager` to track environment states and transitions
+- Implement a weather system with visual weather state changes
+- Set up environment interaction objects
+- Build the clock tower mechanism puzzle
 
-## Development Standards
+### 3. Build the UI Framework
 
-### Code Structure
-- Use Unreal naming conventions (e.g., UCLASS(), UPROPERTY())
-- Organize systems in their respective folders under Source/TimeLoop
-- Keep core game logic in C++, with Blueprint exposure for content creation
-- Document all classes and major functions with comments
+- Design and implement HUD elements for:
+  - Time display
+  - Quest tracking
+  - Dialogue interface
+  - Inventory
+  - Journal system to track discovered knowledge
+  - Relationships panel
 
-### Testing Approach
-- Test each system individually as it's implemented
-- Create a test map for each major feature
-- Maintain a test checklist for core functionality
-- Implement automated tests for critical systems
+### 4. Create the Initial Test Level
 
-## Next Immediate Tasks
+- Design a small test environment with:
+  - Player spawn point
+  - Clock tower
+  - A few test buildings
+  - Test NPCs with schedules
+  - Interactive objects
+  - Weather variation
 
-1. **Initialize Unreal Project**
-   - Create new C++ project with First Person template
-   - Configure project settings per UNREAL_SETUP.md
-   - Set up Git repository with LFS for asset tracking
+### 5. Implement Data-Driven Content
 
-2. **Implement TimeManager Class**
-   - Create basic time tracking functionality
-   - Implement game clock with hour/minute progression
-   - Add time acceleration control
-   - Create day completion detection
+- Create data tables for:
+  - NPCs and their schedules
+  - Dialogue trees
+  - Quests and objectives
+  - Knowledge flags
 
-3. **Basic Player Setup**
-   - Modify the template first person character for our needs
-   - Add interaction system (raycasting for interactive objects)
-   - Implement player state that persists across loop resets
+### 6. Testing Framework
 
-4. **Simple Test Environment**
-   - Create basic town square layout
-   - Add simple interactive objects (doors, items)
-   - Implement day/night lighting changes
+- Implement test mode to accelerate time for debugging
+- Create tools to inspect NPC states, schedules, and relationships
+- Add debug visualization for time-sensitive elements
 
-5. **Initial Time Loop Reset**
-   - Create loop reset trigger (time-based or manual)
-   - Implement state reset functionality
-   - Add knowledge persistence framework
+## Blueprint Integration Plan
 
-## Resources
-- [Unreal Engine 5.2 Documentation](https://docs.unrealengine.com/5.2/en-US/)
-- Project documentation in /docs folder
-- PHASE1_PLAN.md for detailed implementation steps
-- GROUNDHOGDAY.md for game design details
+While we've set up the core C++ classes, many of these systems will be exposed to Blueprints to allow for easier content creation:
 
-## Collaboration Notes
-- Create a branch for each major system implementation
-- Use pull requests with code reviews before merging to main
-- Keep regular backups of the project
-- Document any deviations from the original plan
+1. Create Blueprint subclasses for `NPCCharacter` for each story character
+2. Implement Blueprint interfaces for interactive objects
+3. Create Blueprint data assets for dialogue trees and quest definitions
+4. Expose key events through Blueprint-implementable events
 
-This guide will be updated regularly as development progresses. The next update will focus on details of implementing the first playable prototype.
+## Technical Decisions
+
+- Using C++ for core systems to ensure performance and stability
+- Leveraging Unreal's save game system for persistent data
+- Implementing a modular design where systems can be tested independently
+- Using game subsystem approach rather than singletons for better testability
+
+## Getting Started on Development
+
+To begin work on the next phase:
+
+1. Complete the basic project setup in Unreal Engine
+2. Create a new C++ project with the structure defined in these files
+3. Import the core system files we've created
+4. Set up source control to track changes
+5. Begin implementing the player character and test environment
+
+## Key Technical Challenges to Address
+
+1. Maintaining time synchronization across all systems
+2. Efficiently saving and restoring world state during loop resets
+3. Managing relationships between persistent and non-persistent data
+4. Implementing efficient scheduling for potentially many NPCs
+5. Creating a system for environment state changes based on player actions
+
+## Timeline Estimate
+
+- **System Implementation:** 4-6 weeks
+- **Basic Environment/Testing:** 2-3 weeks
+- **Content Creation Tools:** 2 weeks
+- **Initial Gameplay Loop Testing:** 2 weeks
+
+This foundation will enable us to start building the actual gameplay mechanics and begin implementing the story content defined in our design documents.
