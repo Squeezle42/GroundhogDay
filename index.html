@@ -9,6 +9,63 @@
     <meta name="description" content="A narrative adventure game where you're trapped in an endlessly repeating day in a small winter town.">
 </head>
 <body>
+    <!-- Game Container -->
+    <div id="game-container">
+        <!-- HUD Elements -->
+        <div id="hud">
+            <div id="time-container">
+                <div id="time-display">6:00 AM</div>
+                <div id="day-counter">Day 1</div>
+            </div>
+            <div id="weather-display">Snowing</div>
+            <div class="hud-buttons">
+                <button id="journal-button" class="hud-button">Journal</button>
+                <button id="inventory-button" class="hud-button">Inventory</button>
+                <button id="menu-button" class="hud-button">Menu</button>
+            </div>
+        </div>
+        
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <div id="location-header">
+                <h1 id="location-title">Hibernation Inn</h1>
+                <p id="location-description">A cozy bed & breakfast where you're staying during your visit to Pinewood Hollow.</p>
+            </div>
+            
+            <div id="game-view">
+                <img id="location-image" src="assets/images/locations/loc_inn_morning_snowing.jpg" alt="Hibernation Inn">
+                
+                <div id="interaction-area">
+                    <div id="navigation-buttons" class="button-group">
+                        <!-- Navigation buttons will be added here -->
+                    </div>
+                    
+                    <div id="interaction-buttons" class="button-group">
+                        <!-- Interaction buttons will be added here -->
+                    </div>
+                </div>
+                
+                <div id="dialogue-box" style="display: none;">
+                    <!-- Dialogue content will be added here -->
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <h2>Time Loop</h2>
+            <p>Loading...</p>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script type="module" src="scripts/core/main.js"></script>
+</body>
     <div id="game-container">
         <!-- Game Canvas -->
         <canvas id="game-canvas"></canvas>

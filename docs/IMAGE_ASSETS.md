@@ -9,6 +9,20 @@ This document outlines all image assets required for the Time Loop game, includi
 ### Formats
 - **UI Elements**: PNG with transparency (24-bit)
 - **Character Portraits**: PNG with transparency (24-bit)
+- **Backgrounds**: JPG (high quality) or PNG (24-bit)
+- **Location Maps**: PNG with transparency (24-bit)
+- **Items**: PNG with transparency (24-bit)
+- **Weather Effects**: PNG sequence with transparency (24-bit)
+
+### Naming Convention
+All image assets should follow this naming convention:
+`[category]_[subcategory]_[name]_[state].[extension]`
+
+Examples:
+- `char_protagonist_alex_neutral.png`
+- `loc_townsquare_day_sunny.jpg`
+- `ui_button_interact_default.png`
+- `item_key_rusty_inventory.png`
 - **Background Images**: JPG (for locations without transparency needs) or PNG (when transparency is required)
 - **Icons**: SVG (vector) or PNG (24-bit with transparency)
 - **Textures**: PNG or JPG depending on transparency needs
@@ -63,6 +77,35 @@ For each NPC, the following images are needed:
 - Elderly Resident
 - Mysterious Stranger
 
+## Character Assets
+Located in: `assets/images/characters/`
+
+### Main Character
+- **Dimensions**: 512x1024px
+- **Required States**: neutral, happy, sad, surprised, thoughtful
+- **Variants**: morning, day, evening, night (lighting variations)
+- **Files Needed**:
+  - `char_protagonist_front_[state].png`
+  - `char_protagonist_side_[state].png`
+  - `char_protagonist_back_[state].png`
+  - `char_protagonist_portrait_[state].png` (256x256px close-up for dialogue)
+
+### NPCs
+- **Dimensions**: 512x1024px
+- **Characters Needed**:
+  - Mayor (older man, distinguished)
+  - Diner Owner (middle-aged woman, friendly)
+  - Clockmaker (elderly, eccentric)
+  - Sheriff (stern, suspicious)
+  - Librarian (quiet, knowledgeable)
+  - Festival Handler (stressed, enthusiastic)
+  - Various Townsfolk (5-10 different designs)
+- **States for Each**: neutral, talking, unique character-specific state
+- **Files Example**:
+  - `char_mayor_johnson_neutral.png`
+  - `char_mayor_johnson_talking.png`
+  - `char_mayor_johnson_ceremonial.png` (character-specific)
+
 ### assets/images/locations/
 Images for game locations and backgrounds.
 
@@ -100,6 +143,27 @@ Images for game locations and backgrounds.
 - `environment-fountain.png` - Town fountain
 - `environment-groundhog-statue.png` - Statue of groundhog
 
+## Location Assets
+Located in: `assets/images/locations/`
+
+### Town Square
+- **Dimensions**: 1920x1080px (background)
+- **Time Variants**: morning, day, evening, night
+- **Weather Variants**: clear, snowy, heavy snow
+- **Files Needed**:
+  - `loc_townsquare_[time]_[weather].jpg`
+  - `loc_townsquare_map.png` (top-down simplified map, 512x512px)
+
+### Other Locations
+- **Main Street**: shops exterior views
+- **Diner Interior**: cozy, small-town diner
+- **Clock Tower**: interior and exterior
+- **Library**: warm, wood-paneled interior
+- **Player's Lodging**: small bed & breakfast room
+- **Town Hall**: formal, administrative setting
+- **Forest Path**: snowy forest trail
+- **Frozen Lake**: scenic, isolated area
+
 ### assets/images/items/
 Images for inventory items and interactive objects.
 
@@ -124,6 +188,20 @@ Images for inventory items and interactive objects.
 - `collectible-coin.png` - Commemorative coin
 - `collectible-postcard.png` - Town postcard
 - `collectible-snowglobe.png` - Snow globe souvenir
+
+## Items
+Located in: `assets/images/items/`
+
+- **Dimensions**: 256x256px
+- **Categories**:
+  - Keys & Access Items
+  - Information Items (notes, photos)
+  - Quest Items
+  - Interactive Objects
+- **Files Example**:
+  - `item_key_clocktower_inventory.png`
+  - `item_note_mysterious_inventory.png`
+  - `item_object_groundhogstatue_scene.png`
 
 ### assets/images/ui/
 User interface elements and icons.
@@ -166,8 +244,15 @@ User interface elements and icons.
 - `ui-quest-update.png` - Quest update notification
 - `ui-item-acquired.png` - Item acquisition notification
 
-### assets/images/effects/
-Visual effects and animation elements.
+## Weather Effects
+Located in: `assets/images/effects/`
+
+- **Snow Overlay**: 1920x1080px semi-transparent
+  - `effect_snow_[intensity].png` (light, medium, heavy)
+- **Fog Effect**: 1920x1080px semi-transparent
+  - `effect_fog_[intensity].png`
+- **Day-Night Transition**: Color overlay gradients
+  - `effect_daytime_[period].png` (morning, noon, evening, night)
 
 #### Required Effect Images
 
