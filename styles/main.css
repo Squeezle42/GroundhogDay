@@ -374,31 +374,45 @@ a:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
     transform-origin: center;
+    transform: scale(0.85); /* Scale down slightly to fit better with debug console open */
     transition: transform 0.3s ease;
 }
 
+/* Apply even more scaling when height is very limited */
+@media (max-height: 600px) {
+    .loading-animation {
+        transform: scale(0.7);
+    }
+}
+
+@media (max-height: 500px) {
+    .loading-animation {
+        transform: scale(0.6);
+    }
+}
+
 .guide-animation {
-    width: 256px;
-    height: 256px;
-    margin-bottom: 10px;
+    width: 200px; /* Smaller default size */
+    height: 200px;
+    margin-bottom: 5px;
     animation: float 4s infinite ease-in-out;
     object-fit: contain; /* Ensure image maintains aspect ratio */
-    max-width: 80vw; /* Responsive width */
-    max-height: 30vh; /* Responsive height */
+    max-width: 70vw; /* More conservative responsive width */
+    max-height: 25vh; /* More conservative responsive height */
 }
 
 @keyframes float {
     0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
+    50% { transform: translateY(-10px); }
     100% { transform: translateY(0px); }
 }
 
 .loading-content {
     text-align: center;
     background-color: rgba(255, 255, 255, 0.1);
-    padding: 20px;
+    padding: 15px; /* Slightly reduced padding */
     border-radius: 10px;
     backdrop-filter: blur(5px);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
