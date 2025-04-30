@@ -23,8 +23,73 @@ For developers and testers, see [docs/TESTING_GUIDE.md](docs/TESTING_GUIDE.md) f
 ## Deployment
 For deployment instructions including Google Cloud hosting setup, see [docs/DEPLOYMENT_AND_CREDITS.md](docs/DEPLOYMENT_AND_CREDITS.md).
 
+## Development Setup
+
+### Prerequisites
+- Node.js (v14.x or later)
+- Python 3.6+ (for script generation features)
+- ffmpeg (for video generation)
+- Git
+
+### Installation
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/groundhog-day-game.git
+   cd groundhog-day-game
+   ```
+
+2. Install Node.js dependencies:
+   ```
+   npm install
+   ```
+
+3. Install Python dependencies (optional, for image/video generation):
+   ```
+   pip install -r requirements.txt
+   ```
+
+4. Run the development server:
+   ```
+   npm start
+   ```
+   
+   Or use the provided batch files:
+   ```
+   launch_servers.bat
+   ```
+
+### Environment Variables
+If you're using the image generation features, you'll need to set up your OpenAI API key:
+```
+# Windows
+set OPENAI_API_KEY=your-api-key-here
+
+# Linux/Mac
+export OPENAI_API_KEY=your-api-key-here
+```
+
+## Git Workflow
+
+### Branch Strategy
+- `main`: Stable production-ready code
+- `develop`: Integration branch for ongoing development
+- `feature/*`: Feature branches for new functionality
+- `bugfix/*`: Branches for fixing bugs
+
+### Commit Guidelines
+- Use descriptive commit messages that explain the change
+- Start with a verb in the present tense (e.g., "Add feature" not "Added feature")
+- Reference issue numbers when applicable
+
+Example: `Add character dialogue system (#42)`
+
 ## Contribution Guidelines
-*[To be defined as the project structure solidifies]*
+1. Fork the repository
+2. Create a new branch for your feature or bugfix
+3. Make your changes
+4. Run tests if available
+5. Submit a pull request against the `develop` branch
+6. Ensure your code follows the project's style guidelines
 
 ## License
 This project is licensed under the GNU General Public License v3.0 (GPLv3) - a copyleft license that ensures the software and its derivatives remain free and open source. See the [LICENSE](LICENSE.md) file for details.

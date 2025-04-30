@@ -1,0 +1,12 @@
+# Core dependencies
+requests==2.31.0
+Pillow==10.2.0
+python-dotenv==1.0.1
+
+# Development tools
+watchdog==3.0.0
+colorama==0.4.6
+
+# For image generation and video processing
+openai==1.13.3
+tqdm==4.66.2
