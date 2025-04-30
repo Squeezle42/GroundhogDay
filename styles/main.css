@@ -26,6 +26,7 @@
 @import 'components/screens.css';    /* Game screens (journal, inventory, etc.) */
 @import 'components/loading.css';    /* Loading screen */
 @import 'components/scene3d.css';    /* 3D scene and interaction bubbles */
+@import 'components/notifications.css'; /* Notification system */
 
 /* Guide Button - The Answer to Life, the Universe, and Everything */
 #guide-button {

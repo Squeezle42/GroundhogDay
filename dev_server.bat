@@ -61,12 +61,12 @@ echo.
 
 :: Try to use npx for more reliable execution
 echo Using npx to run browser-sync...
-call npx browser-sync start --server --port 5000 --files "*.html, styles/**/*.css, scripts/**/*.js, assets/**/*" --no-notify --browser "chrome" --startPath "index.html"
+call npx browser-sync start --server --port 5000 --files "*.html, styles/**/*.css, scripts/**/*.js, assets/**/*" --no-notify --browser "chrome" --startPath "index.html" --no-ui
 
 :: Fallback if npx fails
 if %ERRORLEVEL% neq 0 (
     echo Npx execution failed, trying direct browser-sync command...
-    call browser-sync start --server --port 5000 --files "*.html, styles/**/*.css, scripts/**/*.js, assets/**/*" --no-notify --browser "chrome" --startPath "index.html"
+    call browser-sync start --server --port 5000 --files "*.html, styles/**/*.css, scripts/**/*.js, assets/**/*" --no-notify --browser "chrome" --startPath "index.html" --no-ui
 )
 
 pause
