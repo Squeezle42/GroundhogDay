@@ -4,166 +4,136 @@
  * Copyright (C) 2025 Time Loop Game Development Team
  */
 
-/* Import variables */
-@import 'variables.css';
-
 /* 3D Scene Container */
 #scene3d-container {
+    position: relative;
     width: 100%;
     height: 100%;
-    position: relative;
-    min-height: 400px;
     background-color: var(--color-bg-dark);
     overflow: hidden;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
 }
 
-/* Canvas for 3D rendering */
+/* Placeholder content for 3D scene */
+.scene3d-placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: 2rem;
+    background-color: rgba(20, 25, 40, 0.7);
+    border: 1px solid var(--color-primary);
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    max-width: 80%;
+}
+
+.scene3d-placeholder h3 {
+    color: var(--color-primary-light);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+/* Toggle View Button */
+#toggle-view-mode {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(30, 58, 138, 0.8);
+    color: white;
+    border: 2px solid #4a6fa5;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 0;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+#toggle-view-mode::before {
+    content: "3D";
+    font-size: 18px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#toggle-view-mode:hover {
+    background-color: rgba(49, 78, 161, 0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+#toggle-view-mode:active {
+    transform: translateY(0);
+}
+
+/* 3D Scene Canvas */
 #scene3d-canvas {
     width: 100%;
     height: 100%;
     display: block;
 }
 
-/* Interactive objects in 3D scene */
-.interactive-object {
-    cursor: pointer;
-    transition: filter 0.2s ease;
-}
-
-.interactive-object:hover {
-    filter: brightness(1.2);
-}
-
-/* Instruction Bubbles */
-.instruction-bubble {
-    position: absolute;
-    padding: 8px 15px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 100;
-    transform: translate(-50%, -130%);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    text-align: center;
-}
-
-/* Arrow pointing down from bubble */
-.instruction-bubble::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    margin-left: -8px;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid rgba(0, 0, 0, 0.7);
-}
-
-/* Show bubble when object is hovered */
-.interactive-object:hover + .instruction-bubble,
-.instruction-bubble.visible {
-    opacity: 1;
-}
-
-/* 3D object highlight effects */
-.highlight-outline {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-}
-
-/* Object selection indicators */
-.selection-indicator {
+/* 3D Interaction Bubbles */
+.interaction-bubble {
     position: absolute;
     width: 30px;
     height: 30px;
-    border: 2px solid var(--color-primary-light);
     border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
-    70% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.7; }
-    100% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
-}
-
-/* Context menu for 3D objects */
-.object-context-menu {
-    position: absolute;
-    background-color: rgba(20, 30, 40, 0.9);
-    border-radius: 8px;
-    padding: 5px 0;
-    z-index: 110;
-    min-width: 120px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.context-menu-item {
-    padding: 8px 15px;
-    cursor: pointer;
-    color: white;
-    transition: background-color 0.2s;
-    font-size: 0.9rem;
-}
-
-.context-menu-item:hover {
     background-color: var(--color-primary);
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px rgba(76, 110, 245, 0.7);
+    z-index: var(--z-front);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Loading indicator for 3D scene */
-.scene-loading {
+.interaction-bubble::after {
+    content: "!";
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.interaction-bubble:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    box-shadow: 0 0 15px rgba(76, 110, 245, 0.9);
+}
+
+/* 3D Movement Controls */
+.movement-controls {
     position: absolute;
-    top: 50%;
+    bottom: 20px;
     left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 1.2rem;
-    text-align: center;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: var(--z-front);
 }
 
-.scene-loading:after {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 40px;
-    margin: 10px auto;
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top-color: white;
+.movement-button {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Toggle view mode button */
-#toggle-view-mode {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    padding: 8px 15px;
-    background-color: rgba(26, 26, 46, 0.8);
+    background-color: rgba(30, 38, 56, 0.8);
+    border: 2px solid var(--color-primary);
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    z-index: 50;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
 }
 
-#toggle-view-mode:hover {
-    background-color: var(--color-primary);
+.movement-button:hover {
+    background-color: rgba(50, 58, 76, 0.9);
+    transform: translateY(-2px);
 }

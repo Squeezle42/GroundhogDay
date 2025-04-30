@@ -27,6 +27,9 @@
 @import 'components/loading.css';    /* Loading screen */
 @import 'components/scene3d.css';    /* 3D scene and interaction bubbles */
 @import 'components/notifications.css'; /* Notification system */
+@import 'components/buttons.css';    /* Navigation and interaction buttons */
+@import 'components/interaction.css';   /* Navigation and interaction buttons */
+@import 'components/image-display.css'; /* Image display and aspect ratio handling */
 
 /* Guide Button - The Answer to Life, the Universe, and Everything */
 #guide-button {

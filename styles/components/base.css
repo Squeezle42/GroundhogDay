@@ -4,49 +4,37 @@
  * Copyright (C) 2025 Time Loop Game Development Team
  */
 
-/* Import variables */
-@import 'variables.css';
-
-/* Reset and base element styles */
-*, *::before, *::after {
+/* Base Styles */
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html {
-    font-size: 16px;
+html, body {
+    height: 100%;
     font-family: var(--font-family-base);
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: var(--color-bg-dark);
+    color: var(--color-text);
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    font-family: var(--font-family-base);
-    color: var(--color-text-light);
-    background-color: var(--color-bg-dark);
-    line-height: 1.6;
-    overflow: hidden;
-    width: 100vw;
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    max-height: 100vh; /* Ensure body doesn't exceed viewport height */
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-family-heading);
     font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: var(--spacing-md);
-    color: var(--color-text-light);
-}
-
-h1 {
-    font-size: var(--font-size-3xl);
-}
-
-h2 {
-    font-size: var(--font-size-2xl);
-}
-
-h3 {
-    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text);
 }
 
 p {
@@ -60,35 +48,18 @@ a {
 }
 
 a:hover {
-    color: var(--color-primary);
-    text-decoration: underline;
+    color: var(--color-accent);
 }
 
 button {
     cursor: pointer;
     font-family: var(--font-family-base);
     font-size: var(--font-size-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    background-color: var(--color-primary);
-    color: var(--color-text-light);
-    border: none;
-    border-radius: var(--border-radius);
-    transition: background-color var(--transition-fast);
-}
-
-button:hover {
-    background-color: var(--color-primary-dark);
+    transition: all var(--transition-fast);
 }
 
 button:focus {
-    outline: 2px solid var(--color-primary-light);
-    outline-offset: 2px;
-}
-
-button:disabled {
-    background-color: var(--color-bg-light);
-    cursor: not-allowed;
-    opacity: 0.7;
+    outline: 2px solid var(--color-primary);
 }
 
 img {
@@ -100,26 +71,24 @@ img {
     display: none !important;
 }
 
-.invisible {
-    visibility: hidden;
+.fade-out {
+    opacity: 0;
+    transition: opacity var(--transition-medium);
 }
 
-.faded {
-    opacity: 0.5;
+/* Animation Keyframes */
+@keyframes flash {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
 }
 
-/* High contrast mode */
-body.high-contrast {
-    filter: contrast(1.4);
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
-/* Large text mode */
-body.large-text {
-    font-size: 1.2rem;
-}
-
-/* Reduced motion mode */
-body.reduced-motion * {
-    animation-duration: 0.001ms !important;
-    transition-duration: 0.001ms !important;
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
 }

@@ -4,134 +4,121 @@
  * Copyright (C) 2025 Time Loop Game Development Team
  */
 
-/* Import variables */
-@import 'variables.css';
-
-/* Game Container */
+/* Main Layout */
 #game-container {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
-    overflow: hidden;
-    position: relative;
     display: flex;
     flex-direction: column;
-    background-color: var(--color-bg-dark);
 }
 
-/* Main Content Area */
+/* HUD at the top */
+#hud {
+    height: 50px; /* Reduced height */
+    background-color: rgba(30, 38, 56, 0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-md);
+    border-bottom: 2px solid var(--color-primary);
+    z-index: var(--z-menu);
+}
+
+/* Main content area */
 #main-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    position: relative;
     overflow: hidden;
-    padding: var(--spacing-md);
-    background-color: var(--color-bg-medium);
+    position: relative;
 }
 
 /* Location header */
 #location-header {
-    padding: var(--spacing-md) var(--spacing-md) 0;
-    margin-bottom: var(--spacing-md);
+    background-color: rgba(26, 32, 48, 0.8);
+    padding: var(--spacing-sm) var(--spacing-md); /* Reduced padding */
+    border-bottom: 1px solid rgba(76, 110, 245, 0.3);
 }
 
 #location-title {
-    font-size: var(--font-size-2xl);
-    margin-bottom: var(--spacing-sm);
-    color: var(--color-text-light);
+    font-size: var(--font-size-xl); /* Slightly smaller */
+    margin-bottom: 2px; /* Reduced margin */
+    color: var(--color-accent);
 }
 
 #location-description {
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-sm); /* Smaller */
     color: var(--color-text-muted);
-    max-width: 800px;
+    margin-bottom: 0;
+    line-height: 1.3; /* Tighter line height */
 }
 
-/* Game View (where main content is displayed) */
+/* Game View */
 #game-view {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     position: relative;
     overflow: hidden;
-    border-radius: var(--border-radius-lg);
-    background-color: var(--color-bg-dark);
-    box-shadow: var(--box-shadow);
-    min-height: 400px;
 }
 
-/* Image view for 2D mode */
+/* Image View */
 #image-view {
-    width: 100%;
-    height: 100%;
+    flex: 1;
     position: relative;
+    height: calc(100vh - 115px); /* Viewport height minus HUD and location header */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 #location-image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    height: calc(100% - 65px); /* Full height minus interaction area */
+    object-fit: contain; /* Show full image without cropping */
+    background-color: #151b29; /* Dark background to fill empty space */
 }
 
-/* Interaction area (buttons for 2D mode) */
+/* Interaction Area */
 #interaction-area {
-    position: absolute;
+    position: relative; /* Changed from absolute to relative */
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: var(--spacing-md);
+    height: 65px; /* Fixed height */
+    background-color: rgba(26, 32, 48, 0.95); /* More opaque */
+    padding: 5px 10px; /* Further reduced padding */
+    border-top: 2px solid rgba(76, 110, 245, 0.5);
+    overflow-y: auto; /* Allow scrolling if needed */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* Game Canvas */
+#game-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* Screens (Journal, Inventory, etc.) */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(21, 27, 41, 0.95);
+    z-index: var(--z-modal);
     display: flex;
-    justify-content: space-between;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    flex-direction: column;
+    transition: transform var(--transition-medium), opacity var(--transition-medium);
 }
 
-.button-group {
-    display: flex;
-    gap: var(--spacing-sm);
-    flex-wrap: wrap;
-}
-
-/* Control button - used for toggle buttons and actions */
-.control-button {
-    position: relative;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius);
-    background-color: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    font-size: var(--font-size-sm);
-    transition: all var(--transition-fast);
-    cursor: pointer;
-    text-align: center;
-}
-
-.control-button:hover {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary-light);
-}
-
-/* Responsive Layout */
-@media (max-width: 768px) {
-    #interaction-area {
-        flex-direction: column;
-        gap: var(--spacing-md);
-    }
-    
-    #location-header {
-        padding: var(--spacing-sm);
-    }
-    
-    #location-title {
-        font-size: var(--font-size-xl);
-    }
-}
-
-@media (max-width: 480px) {
-    #main-content {
-        padding: var(--spacing-sm);
-    }
-    
-    .button-group {
-        width: 100%;
-        justify-content: center;
-    }
+.screen.hidden {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
 }

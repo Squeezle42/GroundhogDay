@@ -2,7 +2,8 @@
   "name": "groundhog-day-game",
   "version": "1.0.0",
   "description": "A narrative adventure game where you're trapped in an endlessly repeating day",
-  "main": "index.html",  "scripts": {
+  "main": "index.html",
+  "scripts": {
     "start": "browser-sync start --server --port 5000 --files \"*.html, styles/**/*.css, scripts/**/*.js, assets/**/*\" --no-notify --no-ui",
     "start-dev": "browser-sync start --server --port 5000 --files \"*.html, styles/**/*.css, scripts/**/*.js, assets/**/*, *.py, *.md\" --no-notify --browser \"chrome\" --startPath \"index.html\" --no-ui",
     "start-with-ui": "browser-sync start --server --port 5000 --files \"*.html, styles/**/*.css, scripts/**/*.js, assets/**/*\" --no-notify --browser \"chrome\" --startPath \"index.html\"",

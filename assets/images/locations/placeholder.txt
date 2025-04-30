@@ -1,0 +1,10 @@
+/* This is a placeholder file. Create actual location images in this directory */
+/* Needed image files:
+   - loc_inn_morning_snowing.jpg
+   - loc_inn_morning_clear.jpg
+   - loc_inn_lobby_morning.jpg
+   - loc_town_square_morning_snowing.jpg
+   - loc_town_square_morning_clear.jpg
+   - loc_cafe_morning.jpg
+   - loc_general_store_morning.jpg
+*/

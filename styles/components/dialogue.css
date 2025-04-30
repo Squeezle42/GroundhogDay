@@ -4,111 +4,175 @@
  * Copyright (C) 2025 Time Loop Game Development Team
  */
 
-/* Import variables */
-@import 'variables.css';
-
 /* Dialogue Container */
 #dialogue-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: var(--spacing-md);
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 800px;
+    background-color: rgba(26, 32, 48, 0.95);
+    border: 2px solid var(--color-primary);
+    border-radius: 8px;
+    color: var(--color-text);
     display: flex;
-    z-index: 50;
-    border-top: 2px solid var(--color-primary);
+    z-index: var(--z-dialogue);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-/* NPC Portrait */
+#dialogue-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(20px);
+}
+
+/* Character Portrait */
 .dialogue-portrait {
-    width: 80px;
-    height: 80px;
-    border-radius: var(--border-radius);
-    background-color: var(--color-bg-light);
-    margin-right: var(--spacing-md);
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    border-right: 1px solid var(--color-primary);
+    background-size: cover;
+    background-position: center;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    transition: background-image 0.5s ease;
+    position: relative;
     overflow: hidden;
-    flex-shrink: 0;
 }
 
-.dialogue-portrait img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+/* Portrait animation */
+.dialogue-portrait::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(76, 110, 245, 0.2) 0%, transparent 100%);
+    pointer-events: none;
 }
 
 /* Dialogue Content */
 .dialogue-content {
     flex: 1;
+    padding: 15px;
     display: flex;
     flex-direction: column;
 }
 
-.dialogue-name {
-    font-size: var(--font-size-lg);
-    font-weight: bold;
-    color: var(--color-primary-light);
-    margin-bottom: var(--spacing-xs);
+/* Dialogue Box */
+.dialogue-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-.dialogue-text {
-    font-size: var(--font-size-md);
+/* Dialogue Header */
+.dialogue-header {
+    background-color: var(--color-primary-dark);
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--color-accent);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+#speaker-name {
+    color: var(--color-accent);
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+/* Dialogue Content */
+.dialogue-content {
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.portrait-container {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+}
+
+.character-portrait {
+    width: 100%;
+    height: 100%;
+    border-radius: 10%;
+    border: 2px solid var(--color-accent);
+    background-size: cover;
+    background-position: center;
+}
+
+.dialogue-text-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#dialogue-text {
+    font-size: 1.1rem;
     line-height: 1.5;
-    color: var(--color-text-light);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: 1rem;
+    color: var(--color-text);
 }
 
 /* Dialogue Choices */
-.dialogue-choices {
+#dialogue-choices {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm);
-    margin-top: var(--spacing-sm);
+    gap: 0.5rem;
 }
 
 .dialogue-choice {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--color-bg-light);
+    border: 1px solid var(--color-primary-light);
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
     cursor: pointer;
-    transition: background-color var(--transition-fast);
+    transition: background-color 0.2s, transform 0.1s;
+    text-align: left;
+    color: var(--color-text);
 }
 
 .dialogue-choice:hover {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary-light);
+    background-color: var(--color-primary-dark);
+    transform: translateY(-2px);
 }
 
-/* Dialogue Box (for non-conversation instructions) */
-#dialogue-box {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: var(--spacing-md);
-    border-radius: var(--border-radius);
-    max-width: 80%;
-    z-index: 50;
-    text-align: center;
-    box-shadow: var(--box-shadow);
-    border: 1px solid var(--color-primary);
+.dialogue-choice:active {
+    transform: translateY(1px);
 }
 
-#dialogue-box.important {
-    border-color: var(--color-secondary);
-    background-color: rgba(159, 62, 93, 0.8);
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #dialogue-container {
+        width: 95%;
+        bottom: 10px;
+    }
+    
+    .portrait-container {
+        width: 60px;
+        height: 60px;
+    }
+    
+    #dialogue-text {
+        font-size: 1rem;
+    }
 }
 
-/* Character dialogue animation */
-.typing-animation::after {
-    content: '|';
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
+@media (max-width: 480px) {
+    .dialogue-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .portrait-container {
+        margin-bottom: 0.5rem;
+    }
 }

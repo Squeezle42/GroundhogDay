@@ -1,0 +1,61 @@
+{
+    "inn": {
+        "id": "inn",
+        "name": "Hibernation Inn",
+        "description": "A cozy bed & breakfast where you're staying during your visit to Pinewood Hollow.",
+        "image": "assets/images/Sir Palin and the Golden Castle.jfif",
+        "available_times": ["morning", "afternoon", "evening", "night"],
+        "connections": ["town_square", "inn_lobby", "inn_room"],
+        "weather_variants": {
+            "clear": "assets/images/Sir Palin and the Golden Castle.jfif",
+            "snowing": "assets/images/Sir Palin and the Golden Castle.jfif"
+        },
+        "npcs": ["innkeeper"],
+        "interactions": ["sleep", "look_out_window"],
+        "firstVisitMessage": "You wake up in your room at the Hibernation Inn. Through the window, you can see it's snowing outside."
+    },    "inn_lobby": {
+        "id": "inn_lobby",
+        "name": "Inn Lobby",
+        "description": "The warm, inviting lobby of the Hibernation Inn with a crackling fireplace and rustic decor.",
+        "image": "assets/images/Final Herald.jfif",
+        "available_times": ["morning", "afternoon", "evening"],
+        "connections": ["inn", "town_square"],
+        "npcs": ["innkeeper", "old_timer"],
+        "interactions": ["check_bulletin_board", "sit_by_fire"],
+        "firstVisitMessage": "The inn's lobby is quiet except for the sound of the crackling fire and the occasional creak of the old wooden floors."
+    },    "town_square": {
+        "id": "town_square",
+        "name": "Town Square",
+        "description": "The heart of Pinewood Hollow, surrounded by shops and featuring the town's iconic clock tower.",
+        "image": "assets/images/VillageSquareOverview.jfif",
+        "available_times": ["morning", "afternoon", "evening"],
+        "connections": ["inn_lobby", "cafe", "town_hall", "general_store"],
+        "weather_variants": {
+            "clear": "assets/images/VillageSquareOverview.jfif",
+            "snowing": "assets/images/VillageSquareOverview.jfif"
+        },
+        "npcs": ["mayor", "newspaper_vendor", "dog"],
+        "interactions": ["check_clock_tower", "look_at_sky"],
+        "firstVisitMessage": "The town square is bustling with activity despite the snow. The clock tower shows 7:00 AM - just like it did yesterday...and the day before."
+    },    "cafe": {
+        "id": "cafe",
+        "name": "Groundhog Cafe",
+        "description": "A charming local cafe known for its freshly baked pastries and steaming coffee.",
+        "image": "assets/images/KFC Peasant.jfif",
+        "available_times": ["morning", "afternoon"],
+        "connections": ["town_square"],
+        "npcs": ["waitress", "barista", "local_writer"],
+        "interactions": ["order_coffee", "read_newspaper"],
+        "firstVisitMessage": "The smell of fresh coffee and pastries fills the air. Several locals are enjoying their morning routines, seemingly unaware they're repeating the same day."
+    },    "general_store": {
+        "id": "general_store", 
+        "name": "Wilson's General Store",
+        "description": "A well-stocked general store with everything from groceries to hardware.",
+        "image": "assets/images/Sir Idle Singing with Lute.jfif",
+        "available_times": ["morning", "afternoon", "evening"],
+        "connections": ["town_square"],
+        "npcs": ["shopkeeper", "elderly_shopper"],
+        "interactions": ["browse_items", "purchase_item"],
+        "firstVisitMessage": "The bell above the door jingles as you enter. Mr. Wilson gives you the same greeting he gave you yesterday, completely unaware of the time loop."
+    }
+}

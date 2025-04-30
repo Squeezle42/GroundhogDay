@@ -1,0 +1,93 @@
+/**
+ * Time Loop: A Groundhog Day-Inspired Game
+ * 
+ * Copyright (C) 2025 Time Loop Game Development Team
+ */
+
+/* Interaction Area */
+#interaction-area {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 15px;
+}
+
+/* Button Groups */
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.button-group:last-child {
+    margin-bottom: 0;
+}
+
+/* Navigation Buttons */
+.nav-button {
+    background-color: #1e3a8a;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.nav-button:hover {
+    background-color: #2a4db0;
+}
+
+.nav-button:before {
+    content: "→";
+    margin-right: 8px;
+}
+
+/* Interaction Buttons */
+.interaction-button {
+    background-color: #4a2880;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.interaction-button:hover {
+    background-color: #62359e;
+}
+
+/* Section Headers */
+.section-header {
+    font-weight: bold;
+    color: #d4d4d4;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #interaction-area {
+        padding: 10px;
+    }
+    
+    .button-group {
+        gap: 8px;
+    }
+    
+    .nav-button, 
+    .interaction-button {
+        font-size: 0.9rem;
+        padding: 8px 14px;
+    }
+}

@@ -1,0 +1,91 @@
+{
+    "player": {
+        "id": "player",
+        "name": "Phil",
+        "description": "A cynical weather reporter from the big city, trapped in a time loop in the small town of Pinewood Hollow.",
+        "portrait": "assets/images/Sir Cleese-a-lot Speaking.jfif",
+        "inventory": [],
+        "knowledge": [],
+        "relationships": {}
+    },    "innkeeper": {
+        "id": "innkeeper",
+        "name": "Mrs. Lancaster",
+        "description": "The kind-hearted owner of the Hibernation Inn who seems to tell you the same thing every morning.",
+        "portrait": "assets/images/WitchReaction.jfif",
+        "schedule": {
+            "morning": "inn_lobby",
+            "afternoon": "inn_lobby",
+            "evening": "inn_lobby",
+            "night": "innkeeper_home"
+        },
+        "dialogue": {
+            "default": ["Good morning! Beautiful day for groundhog watching, isn't it?", 
+                       "Your breakfast will be ready soon, dear.",
+                       "Don't forget to sign the guest book!"],
+            "loop_aware": ["Wait... haven't we had this conversation before?",
+                          "Something strange is happening, isn't it?"],
+            "quest_clue": "You know, they say old Mr. Peterson by the lake has studied groundhogs for decades. He might know something about their... unusual behaviors."
+        },
+        "relationship": 0
+    },    "mayor": {
+        "id": "mayor",
+        "name": "Mayor Stevens",
+        "description": "The enthusiastic mayor of Pinewood Hollow, overly invested in the town's Groundhog Festival.",
+        "portrait": "assets/images/HeraldAnnouncement.jfif",
+        "schedule": {
+            "morning": "town_square",
+            "afternoon": "town_hall",
+            "evening": "cafe",
+            "night": "mayor_home"
+        },
+        "dialogue": {
+            "default": ["Welcome to Pinewood Hollow's annual Groundhog Festival!", 
+                       "Don't miss the unveiling ceremony at noon!",
+                       "Our little town has the most accurate weather-predicting groundhog in the country!"],
+            "loop_aware": ["Hmm, I feel like we've had this conversation before... déjà vu perhaps?",
+                          "Something odd is happening with the groundhog ceremony..."],
+            "quest_clue": "The groundhog has been acting strangely this year. Between you and me, I'm worried about the ceremony."
+        },
+        "relationship": 0
+    },    "waitress": {
+        "id": "waitress",
+        "name": "Nancy",
+        "description": "A friendly waitress at the Groundhog Cafe who knows everyone in town.",
+        "portrait": "assets/images/Crowd Laughter with Chicken2.jfif",
+        "schedule": {
+            "morning": "cafe",
+            "afternoon": "cafe",
+            "evening": "town_square",
+            "night": "waitress_home"
+        },
+        "dialogue": {
+            "default": ["Coffee, black, right? Coming right up!", 
+                       "You're the weather guy from the city, aren't you?",
+                       "Try the groundhog-shaped pancakes - they're our specialty!"],
+            "loop_aware": ["Strange... I already knew what you were going to order.",
+                          "Have we met before? I feel like I know you somehow."],
+            "quest_clue": "You know, there's a strange story about the town founder and a magical groundhog. Old Mrs. Wilson at the library has a book about it."
+        },
+        "relationship": 0
+    },    "shopkeeper": {
+        "id": "shopkeeper",
+        "name": "Mr. Wilson",
+        "description": "The no-nonsense owner of Wilson's General Store, whose family has run the shop for generations.",
+        "portrait": "assets/images/Deranged Prophet.jfif",
+        "schedule": {
+            "morning": "general_store",
+            "afternoon": "general_store",
+            "evening": "general_store",
+            "night": "shopkeeper_home"
+        },
+        "dialogue": {
+            "default": ["Just looking around? Let me know if you need help.", 
+                       "We're fully stocked for the festival this weekend!",
+                       "If we don't have it, you don't need it!"],
+            "loop_aware": ["Didn't you buy the exact same things yesterday?",
+                          "I had the strangest dream that you were in here buying the same items over and over..."],
+            "quest_clue": "My grandfather's journal has some strange entries about the town's founder and a curse. Never put much stock in those old tales myself."
+        },
+        "relationship": 0
+    }
+}

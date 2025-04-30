@@ -1,0 +1,147 @@
+{
+    "innkeeper_morning_day1": {
+        "character": "innkeeper",
+        "context": {
+            "location": "inn_lobby",
+            "time": "morning",
+            "day": 1,
+            "requirements": []
+        },
+        "dialogue": [
+            {                "speaker": "innkeeper",
+                "text": "Good morning! You must be the reporter from the city. Beautiful day for the Groundhog Festival, isn't it?",
+                "portrait": "assets/images/WitchReaction.jfif"
+            },
+            {
+                "speaker": "player",
+                "text": "Morning. Is there any coffee available?",
+                "choices": [
+                    {
+                        "text": "Morning. Is there any coffee available?",
+                        "next": "coffee_request"
+                    },
+                    {
+                        "text": "What's this about a groundhog?",
+                        "next": "groundhog_question"
+                    },
+                    {
+                        "text": "I need to get going.",
+                        "next": "exit_conversation"
+                    }
+                ]
+            }
+        ],
+        "branches": {
+            "coffee_request": [
+                {
+                    "speaker": "innkeeper",
+                    "text": "Of course! Freshly brewed. Help yourself at the table over there. Breakfast will be ready in 30 minutes."
+                },
+                {
+                    "speaker": "player",
+                    "text": "Thanks.",
+                    "next": "exit_conversation"
+                }
+            ],
+            "groundhog_question": [
+                {
+                    "speaker": "innkeeper",
+                    "text": "Oh my, you haven't heard? Pinewood Hollow has the most famous weather-predicting groundhog in the country! Today's the big ceremony in the town square."
+                },
+                {
+                    "speaker": "innkeeper",
+                    "text": "As the town legend goes, if Hollow Phil sees his shadow today, we'll have six more weeks of winter. The mayor will be making a big speech and everything."
+                },
+                {
+                    "speaker": "player",
+                    "text": "I see. Thanks for the information.",
+                    "next": "exit_conversation"
+                }
+            ],
+            "exit_conversation": [
+                {
+                    "speaker": "innkeeper",
+                    "text": "Enjoy your stay in Pinewood Hollow! Let me know if you need anything else."
+                }
+            ]
+        },
+        "rewards": {
+            "knowledge": ["groundhog_festival_happening"],
+            "relationship": 1
+        }
+    },
+
+    "mayor_townsquare_morning": {
+        "character": "mayor",
+        "context": {
+            "location": "town_square",
+            "time": "morning",
+            "requirements": []
+        },
+        "dialogue": [
+            {                "speaker": "mayor",
+                "text": "Welcome, welcome! You must be the reporter from Channel 9! I'm Mayor Stevens, and I'm thrilled you're here to cover our annual Groundhog Festival!",
+                "portrait": "assets/images/HeraldAnnouncement.jfif"
+            },
+            {
+                "speaker": "player",
+                "text": "Thanks for having me. Could you tell me more about the festival?",
+                "choices": [
+                    {
+                        "text": "Thanks for having me. Could you tell me more about the festival?",
+                        "next": "festival_info"
+                    },
+                    {
+                        "text": "How accurate is your groundhog, really?",
+                        "next": "groundhog_accuracy"
+                    },
+                    {
+                        "text": "I need to prepare for my broadcast.",
+                        "next": "exit_conversation"
+                    }
+                ]
+            }
+        ],
+        "branches": {
+            "festival_info": [
+                {
+                    "speaker": "mayor",
+                    "text": "Oh, it's the highlight of our year! The ceremony starts at noon sharp in the town square. Our beloved groundhog, Hollow Phil, will make his prediction."
+                },
+                {
+                    "speaker": "mayor",
+                    "text": "There's also a carnival, craft fair, and our famous groundhog-shaped pancake breakfast at the cafe. The whole town participates!"
+                },
+                {
+                    "speaker": "player",
+                    "text": "Sounds... quaint.",
+                    "next": "exit_conversation"
+                }
+            ],            "groundhog_accuracy": [
+                {                "speaker": "mayor",
+                "text": "Hollow Phil has an 85% accuracy rate! Far better than that impostor groundhog in Pennsylvania, if you ask me.",
+                "portrait": "assets/images/characters/mayor_proud.jfif"
+                },
+                {
+                    "speaker": "mayor",
+                    "text": "There's actually an interesting story behind that. Some say our town's founder discovered a magical groundhog that could truly predict the weather."
+                },
+                {
+                    "speaker": "player",
+                    "text": "A magical groundhog. Right.",
+                    "next": "exit_conversation"
+                }
+            ],
+            "exit_conversation": [
+                {
+                    "speaker": "mayor",
+                    "text": "Make sure you're at the town square by noon! It'll be the perfect centerpiece for your broadcast. Pinewood Hollow's moment of fame!"
+                }
+            ]
+        },
+        "rewards": {
+            "knowledge": ["groundhog_ceremony_at_noon", "town_founder_legend"],
+            "relationship": 1
+        }
+    }
+}

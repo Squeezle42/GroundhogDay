@@ -2,611 +2,298 @@
  * Time Loop: A Groundhog Day-Inspired Game
  * 
  * Copyright (C) 2025 Time Loop Game Development Team
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
  * LocationManager - Handles game locations, transitions, and location-specific events
- * Manages the physical spaces of Pinewood Hollow and their state across time loops
  */
 class LocationManager {
-    /**
-     * Create a new LocationManager
-     * @param {Object} gameEngine - Reference to main game engine
-     */
     constructor(gameEngine) {
         this.engine = gameEngine;
         this.currentLocation = null;
-        
-        // Define all locations in the game
-        this.locations = {
-            inn: {
-                name: "Hibernation Inn",
-                description: "A cozy bed & breakfast where you're staying during your visit to Pinewood Hollow.",
-                connections: ["town_square", "main_street"],
-                timeAvailable: "all", // Location is accessible at all times
-                defaultState: {
-                    objects: [
-                        { id: "bed", state: "made", interactable: true },
-                        { id: "desk", state: "normal", interactable: true },
-                        { id: "closet", state: "closed", interactable: true },
-                        { id: "window", state: "closed", interactable: true }
-                    ]
-                },
-                state: {} // Will be initialized with defaultState in resetDay
-            },
-            
-            town_square: {
-                name: "Town Square",
-                description: "The heart of Pinewood Hollow, where the Winter Festival takes place.",
-                connections: ["inn", "main_street", "clock_tower", "town_hall", "groundhog_grotto"],
-                timeAvailable: "all",
-                defaultState: {
-                    objects: [
-                        { id: "festival_stage", state: "setup", interactable: true },
-                        { id: "benches", state: "normal", interactable: false },
-                        { id: "statue", state: "normal", interactable: true },
-                        { id: "decorations", state: "festival", interactable: false }
-                    ]
-                },
-                state: {}
-            },
-            
-            clock_tower: {
-                name: "Clock Tower",
-                description: "The ancient clock tower that has stood in Pinewood Hollow for over 200 years.",
-                connections: ["town_square"],
-                timeAvailable: [7, 21], // Available from 7 AM to 9 PM
-                defaultState: {
-                    objects: [
-                        { id: "clock_face", state: "working", interactable: true },
-                        { id: "mechanism", state: "running", interactable: true },
-                        { id: "stairs", state: "normal", interactable: true },
-                        { id: "observation_deck", state: "normal", interactable: true }
-                    ],
-                    locked: true, // Initially locked until player gets key
-                    keyRequired: "clock_tower_key"
-                },
-                state: {}
-            },
-            
-            main_street: {
-                name: "Main Street",
-                description: "The primary street of Pinewood Hollow, lined with various shops and businesses.",
-                connections: ["town_square", "inn", "diner", "library", "sheriff_office"],
-                timeAvailable: "all",
-                defaultState: {
-                    objects: [
-                        { id: "storefronts", state: "normal", interactable: true },
-                        { id: "streetlights", state: "off", interactable: false }
-                    ]
-                },
-                state: {}
-            },
-            
-            diner: {
-                name: "Sophie's Diner",
-                description: "A warm, inviting diner run by Sophie Chen, who seems to know everything about everyone in town.",
-                connections: ["main_street"],
-                timeAvailable: [6, 22], // 6 AM to 10 PM
-                defaultState: {
-                    objects: [
-                        { id: "counter", state: "normal", interactable: true },
-                        { id: "booths", state: "normal", interactable: true },
-                        { id: "jukebox", state: "off", interactable: true },
-                        { id: "menu_board", state: "normal", interactable: true }
-                    ]
-                },
-                state: {}
-            },
-            
-            library: {
-                name: "Pinewood Library",
-                description: "A quiet, wood-paneled library containing historical records of the town.",
-                connections: ["main_street"],
-                timeAvailable: [9, 19], // 9 AM to 7 PM
-                defaultState: {
-                    objects: [
-                        { id: "bookshelves", state: "normal", interactable: true },
-                        { id: "reading_area", state: "normal", interactable: true },
-                        { id: "historical_section", state: "normal", interactable: true },
-                        { id: "librarian_desk", state: "normal", interactable: true }
-                    ]
-                },
-                state: {}
-            },
-            
-            sheriff_office: {
-                name: "Sheriff's Office",
-                description: "The small law enforcement office run by Sheriff Kate Lawson.",
-                connections: ["main_street"],
-                timeAvailable: [8, 20], // 8 AM to 8 PM
-                defaultState: {
-                    objects: [
-                        { id: "desk", state: "normal", interactable: true },
-                        { id: "filing_cabinet", state: "locked", interactable: true },
-                        { id: "bulletin_board", state: "normal", interactable: true },
-                        { id: "cells", state: "empty", interactable: false }
-                    ]
-                },
-                state: {}
-            },
-            
-            town_hall: {
-                name: "Town Hall",
-                description: "The administrative center of Pinewood Hollow, where Mayor Winters has his office.",
-                connections: ["town_square"],
-                timeAvailable: [8, 17], // 8 AM to 5 PM
-                defaultState: {
-                    objects: [
-                        { id: "reception", state: "normal", interactable: true },
-                        { id: "mayors_office", state: "closed", interactable: true },
-                        { id: "meeting_room", state: "normal", interactable: true },
-                        { id: "archives", state: "locked", interactable: true }
-                    ]
-                },
-                state: {}
-            },
-            
-            groundhog_grotto: {
-                name: "Groundhog Grotto",
-                description: "The special area where the town's oracle groundhog lives and makes its winter prediction.",
-                connections: ["town_square"],
-                timeAvailable: [8, 18], // 8 AM to 6 PM
-                defaultState: {
-                    objects: [
-                        { id: "groundhog_habitat", state: "normal", interactable: true },
-                        { id: "ceremonial_area", state: "normal", interactable: true },
-                        { id: "information_booth", state: "normal", interactable: true },
-                        { id: "viewing_platform", state: "normal", interactable: true }
-                    ]
-                },
-                state: {}
-            },
-            
-            hidden_valley: {
-                name: "Hidden Valley",
-                description: "A secluded location connected to the town's founding, with a frozen pond.",
-                connections: ["forest_path"],
-                timeAvailable: "all",
-                defaultState: {
-                    objects: [
-                        { id: "frozen_pond", state: "normal", interactable: true },
-                        { id: "old_cabin", state: "locked", interactable: true },
-                        { id: "strange_markings", state: "hidden", interactable: true },
-                        { id: "ancient_tree", state: "normal", interactable: true }
-                    ],
-                    discovered: false // Player must discover this location
-                },
-                state: {}
-            },
-            
-            forest_path: {
-                name: "Forest Path",
-                description: "A snowy trail through the woods surrounding Pinewood Hollow.",
-                connections: ["town_square", "hidden_valley"],
-                timeAvailable: [6, 20], // 6 AM to 8 PM (too dark after)
-                defaultState: {
-                    objects: [
-                        { id: "trail_markers", state: "normal", interactable: true },
-                        { id: "fallen_tree", state: "blocked", interactable: true },
-                        { id: "animal_tracks", state: "visible", interactable: true },
-                        { id: "lookout_point", state: "normal", interactable: true }
-                    ],
-                    hiddenValleyRevealed: false // Whether the hidden valley path is visible
-                },
-                state: {}
-            }
-        };
-        
-        // Initialize all location states
-        this.resetDay();
+        this.locations = {};
+        this.currentWeather = "snowing";
+        this.currentTime = "morning";
+        this.visitedLocations = new Set();
     }
     
-    /**
-     * Reset all locations to their default state for a new day
-     */
-    resetDay() {
-        // Clone default state for each location
-        for (const [id, location] of Object.entries(this.locations)) {
-            this.locations[id].state = JSON.parse(JSON.stringify(location.defaultState));
-            
-            // Retain knowledge-dependent states across loops
-            this.applyPersistentKnowledge(id);
-        }
-        
-        console.log("All locations reset to default state");
-    }
-    
-    /**
-     * Apply persistent knowledge to location states
-     * @param {string} locationId - Location to update
-     */
-    applyPersistentKnowledge(locationId) {
-        const knowledge = this.engine.gameState.knowledgeBase;
-        const location = this.locations[locationId];
-        
-        // Example: If player knows about hidden valley, it stays discovered
-        if (locationId === 'hidden_valley' && knowledge.hiddenValleyLocation) {
-            location.state.discovered = true;
-        }
-        
-        // Example: If player has fixed the clock tower mechanics in a previous loop
-        if (locationId === 'clock_tower' && knowledge.clockTowerFixed) {
-            const mechanism = location.state.objects.find(obj => obj.id === 'mechanism');
-            if (mechanism) {
-                mechanism.state = 'fixed';
+    async initialize() {
+        try {
+            const response = await fetch('data/locations.json');
+            if (!response.ok) {
+                throw new Error(`Failed to load locations: ${response.status}`);
             }
-        }
-        
-        // Example: If player has found the key to the archives
-        if (locationId === 'town_hall' && knowledge.hasArchiveKey) {
-            const archives = location.state.objects.find(obj => obj.id === 'archives');
-            if (archives) {
-                archives.state = 'unlocked';
-            }
-        }
-    }
-    
-    /**
-     * Move to a new location
-     * @param {string} locationId - ID of the destination location
-     * @returns {boolean} Whether the move was successful
-     */
-    moveToLocation(locationId) {
-        // Check if the location exists
-        if (!this.locations[locationId]) {
-            console.error(`Location ${locationId} does not exist`);
+            this.locations = await response.json();
+            console.log('Locations loaded:', Object.keys(this.locations).length);
+            return true;
+        } catch (error) {
+            console.error('Error loading locations:', error);
             return false;
         }
-        
-        // Check if location is connected to current location
-        if (this.currentLocation && 
-            !this.locations[this.currentLocation].connections.includes(locationId)) {
-            console.error(`Cannot move directly from ${this.currentLocation} to ${locationId}`);
+    }
+    
+    changeLocation(locationId) {
+        if (!this.locations[locationId]) {
+            console.error(`Location "${locationId}" not found`);
             return false;
         }
         
         // Check if location is available at current time
-        if (!this.isLocationAvailable(locationId)) {
-            console.log(`${this.locations[locationId].name} is not available at this time`);
+        const location = this.locations[locationId];
+        if (!location.available_times.includes(this.currentTime)) {
+            console.log(`Location "${location.name}" is not available at ${this.currentTime}`);
+            this.showNotification(`${location.name} is closed right now. Come back later.`);
             return false;
         }
         
-        // Check for location-specific access requirements
-        if (!this.checkLocationAccess(locationId)) {
-            return false;
-        }
-        
-        // Update the current location
+        // Set current location
         this.currentLocation = locationId;
         
-        // Trigger location change event
-        document.dispatchEvent(new CustomEvent('locationChange', {
-            detail: {
-                location: locationId,
-                locationData: this.locations[locationId]
+        // Check if this is the first visit
+        const isFirstVisit = !this.visitedLocations.has(locationId);
+        if (isFirstVisit) {
+            this.visitedLocations.add(locationId);
+            if (location.firstVisitMessage) {
+                this.showNotification(location.firstVisitMessage);
             }
-        }));
+        }
         
-        console.log(`Moved to ${this.locations[locationId].name}`);
+        // Update the UI
+        this.updateLocationDisplay(location);
         
-        // Run location entry logic
-        this.onLocationEnter(locationId);
+        // Generate navigation buttons
+        this.generateNavigationButtons(location);
+        
+        // Generate interaction buttons
+        this.generateInteractionButtons(location);
+        
+        // Check for NPCs at this location
+        this.checkForNPCs(location);
         
         return true;
     }
-    
-    /**
-     * Check if a location is currently available (based on time)
-     * @param {string} locationId - ID of the location to check
-     * @returns {boolean} Whether the location is available
-     */
-    isLocationAvailable(locationId) {
-        const location = this.locations[locationId];
-        const currentHour = this.engine.gameState.timeOfDay;
+      updateLocationDisplay(location) {
+        // Update location title and description
+        const titleElement = document.getElementById('location-title');
+        const descElement = document.getElementById('location-description');
         
-        // Location available at all times
-        if (location.timeAvailable === 'all') {
-            return true;
+        if (titleElement) titleElement.textContent = location.name;
+        if (descElement) descElement.textContent = location.description;
+        
+        // Update location image based on weather if applicable
+        const imageElement = document.getElementById('location-image');
+        if (imageElement) {
+            let imagePath = location.image;
+            
+            // Check if there's a weather-specific image
+            if (location.weather_variants && location.weather_variants[this.currentWeather]) {
+                imagePath = location.weather_variants[this.currentWeather];
+            }
+            
+            // Handle spaces in image paths by encoding the URL
+            if (imagePath && imagePath.includes(' ')) {
+                // Split path to preserve directory structure
+                const pathParts = imagePath.split('/');
+                const fileName = pathParts.pop(); // Get the filename with spaces
+                const basePath = pathParts.join('/');
+                
+                // Encode just the filename portion
+                const encodedFileName = encodeURIComponent(fileName);
+                imagePath = basePath + '/' + encodedFileName;
+            }
+            
+            imageElement.src = imagePath;
+            imageElement.alt = location.name;
+            
+            // Log the image path to help with debugging
+            console.log('Updated location image:', imagePath);
         }
-        
-        // Location available during specific hours
-        if (Array.isArray(location.timeAvailable)) {
-            const [openHour, closeHour] = location.timeAvailable;
-            return currentHour >= openHour && currentHour < closeHour;
-        }
-        
-        return false;
     }
     
-    /**
-     * Check if the player can access a location (keys, etc.)
-     * @param {string} locationId - ID of the location to check
-     * @returns {boolean} Whether the location is accessible
-     */
-    checkLocationAccess(locationId) {
-        const location = this.locations[locationId];
+    generateNavigationButtons(location) {
+        const navContainer = document.getElementById('navigation-buttons');
+        if (!navContainer) return;
         
-        // Check if location is locked
-        if (location.state.locked) {
-            // Check if player has the required key
-            const hasKey = this.engine.gameState.inventory.some(
-                item => item.id === location.keyRequired
-            );
-            
-            if (!hasKey) {
-                console.log(`${location.name} is locked and requires a key`);
-                return false;
-            }
-        }
+        // Clear existing buttons
+        navContainer.innerHTML = '';
         
-        // Check for hidden/undiscovered locations
-        if (locationId === 'hidden_valley' && !location.state.discovered) {
-            if (!this.locations.forest_path.state.hiddenValleyRevealed) {
-                console.log("You don't know how to get to this location yet");
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    /**
-     * Run logic when entering a location
-     * @param {string} locationId - ID of the location
-     */
-    onLocationEnter(locationId) {
-        const location = this.locations[locationId];
-        
-        // Special case: First time discovering Hidden Valley
-        if (locationId === 'hidden_valley' && !location.state.discovered) {
-            location.state.discovered = true;
-            this.engine.addKnowledge({ hiddenValleyLocation: true });
-            
-            console.log("You've discovered Hidden Valley!");
-            
-            // Trigger discovery event
-            document.dispatchEvent(new CustomEvent('locationDiscovered', {
-                detail: {
-                    location: locationId,
-                    locationName: location.name
+        // Create a button for each connection
+        if (location.connections && location.connections.length > 0) {
+            location.connections.forEach(connectionId => {
+                const connectedLocation = this.locations[connectionId];
+                if (connectedLocation) {
+                    const button = document.createElement('button');
+                    button.className = 'nav-button';
+                    button.textContent = `Go to ${connectedLocation.name}`;
+                    button.addEventListener('click', () => this.changeLocation(connectionId));
+                    navContainer.appendChild(button);
                 }
-            }));
-        }
-        
-        // Update time-dependent objects
-        this.updateLocationForTime(locationId);
-    }
-    
-    /**
-     * Update location appearance based on time of day
-     * @param {string} locationId - ID of the location
-     */
-    updateLocationForTime(locationId) {
-        const location = this.locations[locationId];
-        const currentHour = this.engine.gameState.timeOfDay;
-        
-        // Update objects based on time
-        // Examples:
-        if (locationId === 'main_street') {
-            // Street lights turn on at night
-            const streetlights = location.state.objects.find(obj => obj.id === 'streetlights');
-            if (streetlights) {
-                streetlights.state = (currentHour >= 18 || currentHour < 7) ? 'on' : 'off';
-            }
-        }
-        
-        if (locationId === 'town_square') {
-            // Festival activity changes throughout the day
-            const stage = location.state.objects.find(obj => obj.id === 'festival_stage');
-            if (stage) {
-                if (currentHour < 9) stage.state = 'setup';
-                else if (currentHour < 12) stage.state = 'morning_activities';
-                else if (currentHour < 17) stage.state = 'main_event';
-                else if (currentHour < 21) stage.state = 'evening_celebration';
-                else stage.state = 'cleanup';
-            }
+            });
+        } else {
+            // No connections available
+            const message = document.createElement('p');
+            message.textContent = 'No exits available.';
+            navContainer.appendChild(message);
         }
     }
     
-    /**
-     * Get information about the current location
-     * @returns {Object} Current location data
-     */
-    getCurrentLocationData() {
-        if (!this.currentLocation) {
-            return null;
-        }
+    generateInteractionButtons(location) {
+        const interactionContainer = document.getElementById('interaction-buttons');
+        if (!interactionContainer) return;
         
-        return {
-            id: this.currentLocation,
-            name: this.locations[this.currentLocation].name,
-            description: this.locations[this.currentLocation].description,
-            connections: this.getAvailableConnections(),
-            objects: this.getInteractableObjects()
-        };
+        // Clear existing buttons
+        interactionContainer.innerHTML = '';
+        
+        // Create a button for each interaction
+        if (location.interactions && location.interactions.length > 0) {
+            location.interactions.forEach(interaction => {
+                const button = document.createElement('button');
+                button.className = 'interaction-button';
+                button.textContent = this.getInteractionLabel(interaction);
+                button.addEventListener('click', () => this.handleInteraction(interaction));
+                interactionContainer.appendChild(button);
+            });
+        }
     }
     
-    /**
-     * Get available connections from the current location
-     * @returns {Array} List of available connections
-     */
-    getAvailableConnections() {
-        if (!this.currentLocation) {
-            return [];
-        }
-        
-        return this.locations[this.currentLocation].connections.filter(
-            locationId => this.isLocationAvailable(locationId)
-        ).map(locationId => ({
-            id: locationId,
-            name: this.locations[locationId].name,
-            accessible: this.checkLocationAccess(locationId)
-        }));
+    getInteractionLabel(interaction) {
+        // Convert snake_case to Title Case with spaces
+        const words = interaction.split('_');
+        const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+        return capitalizedWords.join(' ');
     }
     
-    /**
-     * Get interactable objects in the current location
-     * @returns {Array} List of interactable objects
-     */
-    getInteractableObjects() {
-        if (!this.currentLocation) {
-            return [];
-        }
+    handleInteraction(interactionId) {
+        console.log(`Interaction: ${interactionId}`);
         
-        return this.locations[this.currentLocation].state.objects.filter(
-            obj => obj.interactable
-        );
-    }
-    
-    /**
-     * Interact with an object in the current location
-     * @param {string} objectId - ID of the object to interact with
-     * @returns {Object} Result of the interaction
-     */
-    interactWithObject(objectId) {
-        if (!this.currentLocation) {
-            return { success: false, message: "No current location" };
-        }
-        
-        const object = this.locations[this.currentLocation].state.objects.find(
-            obj => obj.id === objectId && obj.interactable
-        );
-        
-        if (!object) {
-            return { success: false, message: "Object not found or not interactable" };
-        }
-        
-        // Process interaction based on object and its state
-        // This will be expanded with specific interaction logic for each object
-        console.log(`Interacting with ${objectId} in ${this.currentLocation}`);
-        
-        // Example interactions
-        if (this.currentLocation === 'clock_tower' && objectId === 'mechanism') {
-            if (object.state === 'running') {
-                return {
-                    success: true,
-                    message: "You examine the clock mechanism. It seems to be working, but something feels off about it.",
-                    newState: object.state
-                };
-            } else if (object.state === 'broken') {
-                // Check if player has knowledge to fix it
-                if (this.engine.gameState.knowledgeBase.clockMechanismSolution) {
-                    object.state = 'fixed';
-                    this.engine.addKnowledge({ clockTowerFixed: true });
-                    return {
-                        success: true,
-                        message: "Using your knowledge from previous loops, you fix the clock mechanism!",
-                        newState: 'fixed'
-                    };
-                } else {
-                    return {
-                        success: true,
-                        message: "The mechanism is broken. You don't know how to fix it yet.",
-                        newState: object.state
-                    };
+        switch (interactionId) {
+            case 'look_out_window':
+                this.showNotification('You gaze out the window. It\'s still snowing, just like yesterday... and the day before.');
+                break;
+            
+            case 'sleep':
+                this.showNotification('You lie down on the bed and close your eyes...');
+                setTimeout(() => {
+                    if (this.engine && typeof this.engine.advanceDay === 'function') {
+                        this.engine.advanceDay();
+                    } else {
+                        this.showNotification('You wake up... and it\'s still the same day.');
+                    }
+                }, 2000);
+                break;
+                
+            case 'check_bulletin_board':
+                this.showNotification('The bulletin board shows information about the Groundhog Day Festival happening today in the town square at noon.');
+                if (this.engine && this.engine.playerKnowledge) {
+                    this.engine.playerKnowledge.add('groundhog_festival_details');
                 }
+                break;
+                
+            case 'sit_by_fire':
+                this.showNotification('You sit by the warm, crackling fire. It feels cozy, offering a brief respite from the cold winter day.');
+                break;
+                
+            case 'check_clock_tower':
+                this.showNotification('The clock tower shows 7:00 AM. Wait... wasn\'t it showing the same time yesterday?');
+                break;
+                
+            case 'look_at_sky':
+                this.showNotification('The sky is overcast with snow clouds. According to the forecast, it should clear up tomorrow... but you\'ve heard that before.');
+                break;
+                
+            case 'order_coffee':
+                this.showNotification('You order a coffee. The waitress seems to know exactly how you like it.');
+                break;
+                
+            case 'read_newspaper':
+                this.showNotification('The headline reads: "Annual Groundhog Festival Today! Will Hollow Phil see his shadow?"');
+                if (this.engine && this.engine.playerKnowledge) {
+                    this.engine.playerKnowledge.add('groundhog_newspaper_article');
+                }
+                break;
+                
+            case 'browse_items':
+                this.showNotification('The store shelves are stocked with various items - groceries, hardware, winter supplies, and Groundhog Festival souvenirs.');
+                break;
+                
+            case 'purchase_item':
+                this.showNotification('You don\'t really need anything at the moment.');
+                break;
+                
+            default:
+                this.showNotification('You can\'t do that right now.');
+        }
+    }
+    
+    checkForNPCs(location) {
+        if (!location.npcs || location.npcs.length === 0) return;
+        
+        // For now, just notify player about NPCs present
+        const npcList = location.npcs.map(npcId => {
+            // Get NPC name if possible
+            if (this.engine && this.engine.characterManager) {
+                const npc = this.engine.characterManager.getCharacter(npcId);
+                return npc ? npc.name : npcId;
             }
+            return npcId;
+        }).join(", ");
+        
+        this.showNotification(`You see: ${npcList}`);
+    }
+    
+    showNotification(message) {
+        // Create notification container if it doesn't exist
+        let container = document.getElementById('notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notification-container';
+            document.body.appendChild(container);
         }
         
-        if (this.currentLocation === 'forest_path' && objectId === 'animal_tracks') {
-            if (!this.locations.forest_path.state.hiddenValleyRevealed) {
-                this.locations.forest_path.state.hiddenValleyRevealed = true;
-                return {
-                    success: true,
-                    message: "You follow the animal tracks and discover a hidden path that seems to lead somewhere special...",
-                    newState: object.state,
-                    discovery: "hidden_valley_path"
-                };
+        // Create and display the notification
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = message;
+        container.appendChild(notification);
+        
+        // Fade out after 8 seconds
+        setTimeout(() => {
+            notification.classList.add('fade-out');
+            setTimeout(() => {
+                notification.remove();
+            }, 1000);
+        }, 8000);
+    }
+    
+    setWeather(weather) {
+        this.currentWeather = weather;
+        // Update the location display if we're at a location
+        if (this.currentLocation && this.locations[this.currentLocation]) {
+            this.updateLocationDisplay(this.locations[this.currentLocation]);
+        }
+    }
+    
+    setTime(time) {
+        this.currentTime = time;
+        
+        // Check if the current location is still available at this time
+        if (this.currentLocation && this.locations[this.currentLocation]) {
+            const location = this.locations[this.currentLocation];
+            if (!location.available_times.includes(time)) {
+                this.showNotification(`As time passes, ${location.name} is closing. You need to leave.`);
+                // Force move to town_square if available, or inn as fallback
+                if (this.locations['town_square'] && this.locations['town_square'].available_times.includes(time)) {
+                    this.changeLocation('town_square');
+                } else if (this.locations['inn'] && this.locations['inn'].available_times.includes(time)) {
+                    this.changeLocation('inn');
+                }
             } else {
-                return {
-                    success: true,
-                    message: "The animal tracks lead to the path to Hidden Valley.",
-                    newState: object.state
-                };
+                // Update the location display for the new time of day
+                this.updateLocationDisplay(location);
             }
-        }
-        
-        // Generic interaction response
-        return {
-            success: true,
-            message: `You examine the ${objectId.replace('_', ' ')}.`,
-            newState: object.state
-        };
-    }
-    
-    /**
-     * Update a location's state with a game event
-     * @param {string} locationId - ID of the location to update
-     * @param {string} eventType - Type of event
-     * @param {Object} eventData - Event data
-     */
-    updateLocationWithEvent(locationId, eventType, eventData) {
-        if (!this.locations[locationId]) {
-            console.error(`Location ${locationId} does not exist`);
-            return;
-        }
-        
-        const location = this.locations[locationId];
-        
-        // Handle different types of events
-        switch (eventType) {
-            case 'npcArrived':
-                // An NPC has arrived at this location
-                console.log(`${eventData.npcName} arrived at ${location.name}`);
-                break;
-                
-            case 'npcLeft':
-                // An NPC has left this location
-                console.log(`${eventData.npcName} left ${location.name}`);
-                break;
-                
-            case 'weatherChange':
-                // Weather has changed
-                console.log(`Weather at ${location.name} changed to ${eventData.weather}`);
-                break;
-                
-            case 'objectStateChange':
-                // An object's state has changed
-                const { objectId, newState } = eventData;
-                const object = location.state.objects.find(obj => obj.id === objectId);
-                if (object) {
-                    object.state = newState;
-                    console.log(`${objectId} at ${location.name} changed to ${newState}`);
-                }
-                break;
-                
-            case 'questTrigger':
-                // A quest event has been triggered at this location
-                console.log(`Quest event ${eventData.questEvent} triggered at ${location.name}`);
-                break;
-        }
-        
-        // If this is the current location, notify the UI to update
-        if (this.currentLocation === locationId) {
-            document.dispatchEvent(new CustomEvent('locationUpdated', {
-                detail: {
-                    location: locationId,
-                    updateType: eventType,
-                    updateData: eventData
-                }
-            }));
         }
     }
 }
 
-// Export the LocationManager class
-export default LocationManager;
+// Make the LocationManager available globally
+window.LocationManager = LocationManager;

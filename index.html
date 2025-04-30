@@ -34,11 +34,9 @@
             <div id="location-header">
                 <h1 id="location-title">Hibernation Inn</h1>
                 <p id="location-description">A cozy bed & breakfast where you're staying during your visit to Pinewood Hollow.</p>
-            </div>
-              <div id="game-view">
-                <!-- 2D image view (shown by default) -->
-                <div id="image-view">
-                    <img id="location-image" src="assets/images/locations/loc_inn_morning_snowing.jpg" alt="Hibernation Inn">
+            </div>              <div id="game-view">
+                <!-- 2D image view (shown by default) -->                <div id="image-view">
+                    <img id="location-image" src="assets/images/Sir%20Palin%20and%20the%20Golden%20Castle.jfif" alt="Hibernation Inn">
                     
                     <div id="interaction-area">
                         <div id="navigation-buttons" class="button-group">
@@ -68,10 +66,28 @@
         <!-- Game Canvas -->
         <canvas id="game-canvas"></canvas>
         
-        <!-- Loading Screen -->
+        <!-- Dialogue Container -->
+        <div id="dialogue-container" class="hidden">
+            <div class="dialogue-box">
+                <div class="dialogue-header">
+                    <h3 id="speaker-name">Character Name</h3>
+                </div>
+                <div class="dialogue-content">
+                    <div class="portrait-container">
+                        <div id="npc-portrait" class="character-portrait"></div>
+                    </div>
+                    <div class="dialogue-text-area">
+                        <p id="dialogue-text">Dialogue text appears here...</p>
+                        <div id="dialogue-choices"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+          
+          <!-- Loading Screen -->
         <div id="loading-screen">
             <div class="loading-animation">
-                <img src="assets/images/ui/dontpanic.jfif" alt="Don't Panic Guide" class="guide-animation">                <div class="loading-content">
+                <img src="assets/images/dontpanic.jfif" alt="Don't Panic Guide" class="guide-animation">                <div class="loading-content">
                     <h1 class="dont-panic">DON'T PANIC</h1>
                     <div class="loading-progress">
                         <div id="loading-bar" style="width: 42%;"></div>
@@ -95,15 +111,14 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Dialogue Interface -->
+          <!-- Dialogue Interface -->
         <div id="dialogue-container" class="hidden">
             <div class="dialogue-portrait" id="npc-portrait"></div>
             <div class="dialogue-content">
                 <p id="speaker-name" class="dialogue-name"></p>
                 <p id="dialogue-text" class="dialogue-text"></p>
+                <div id="dialogue-choices" class="dialogue-choices"></div>
             </div>
-            <div id="dialogue-choices" class="dialogue-choices"></div>
         </div>
         
         <!-- Game UI -->
@@ -239,11 +254,17 @@
     <script src="scripts/core/quest.js"></script>
     <script src="scripts/core/save-system.js"></script>
     <script src="scripts/world/world.js"></script>
-    <script src="scripts/ui/ui-manager.js"></script>    <script src="scripts/ui/dialogue-ui.js"></script>    <script src="scripts/ui/journal-ui.js"></script>
-    <script src="scripts/ui/inventory-ui.js"></script>
-    <script src="scripts/ui/menu-ui.js"></script>
+        <!-- Game Engine Scripts -->
+    <script src="scripts/world/location-manager.js"></script>
+    <script src="scripts/core/character-manager.js"></script>
+    <script src="scripts/engine/time-loop-engine.js"></script>
+    
+    <!-- UI Scripts -->
+    <script src="scripts/ui/ui-manager.js"></script>
     <script src="scripts/ui/view-manager.js"></script>
     <script src="scripts/ui/window-manager.js"></script>
-    <script src="scripts/main.js"></script>
+    
+    <!-- Main Script -->
+    <script src="scripts/core/main.js"></script>
 </body>
 </html>
