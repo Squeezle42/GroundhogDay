@@ -3,6 +3,15 @@
 Monty Python-style Trump Roast Video Generator
 This script uses AI image generation and FFMPEG to create a video of the Monty Python-style
 Trump roast scene from the README-InApp.md file.
+
+Requirements:
+- Python 3.6+
+- OpenAI API key
+- FFMPEG installed and in your PATH
+- Python packages: requests, tqdm (optional for progress bars)
+
+You can install required packages with:
+    pip install requests tqdm
 """
 
 import os
@@ -11,16 +20,56 @@ import json
 import requests
 import subprocess
 import re
-from tqdm import tqdm
 from pathlib import Path
-import ;
 import shutil
 import random
+import typing
+from typing import Iterable, Any, TypeVar, Optional
+
+T = TypeVar('T')
+
+# Try to import tqdm for progress bars, but provide a fallback if not installed
+try:
+    from tqdm import tqdm  # type: ignore
+except ImportError:
+    # Simple fallback for tqdm if not installed
+    def tqdm(iterable: Iterable[T], *args, **kwargs) -> Iterable[T]:
+        """Fallback implementation of tqdm for progress tracking."""
+        print("Note: Install tqdm package for better progress visualization")
+        return iterable
 
 # You'll need to add your API key here
 # OPENAI_API_KEY = "your-openai-api-key"
 # Or use environment variables:
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+
+def get_api_key():
+    """Get the OpenAI API key from environment variables or prompt the user."""
+    global OPENAI_API_KEY
+    if OPENAI_API_KEY:
+        return OPENAI_API_KEY
+    
+    # Try to load from a local file if it exists
+    api_key_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".openai_api_key")
+    if os.path.exists(api_key_file):
+        with open(api_key_file, "r") as f:
+            OPENAI_API_KEY = f.read().strip()
+            if OPENAI_API_KEY:
+                return OPENAI_API_KEY
+    
+    # If not found, prompt the user
+    print("\nOpenAI API Key not found in environment variables or local file.")
+    print("You can get an API key from https://platform.openai.com/")
+    OPENAI_API_KEY = input("Please enter your OpenAI API key: ").strip()
+    
+    # Save for future use if the user wants to
+    save = input("Save this key for future use (y/n)? ").lower()
+    if save.startswith("y"):
+        with open(api_key_file, "w") as f:
+            f.write(OPENAI_API_KEY)
+        print(f"API key saved to {api_key_file}")
+    
+    return OPENAI_API_KEY
 
 # Image generation settings
 IMAGE_WIDTH = 1024
@@ -109,13 +158,25 @@ def ensure_directories_exist():
     Path(IMAGE_DIR).mkdir(exist_ok=True)
     Path(VIDEO_OUTPUT_DIR).mkdir(exist_ok=True)
 
+def check_ffmpeg():
+    """Verify that ffmpeg is installed and accessible."""
+    try:
+        result = subprocess.run(["ffmpeg", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        return result.returncode == 0
+    except FileNotFoundError:
+        return False
+
 def check_api_key():
     """Verify that the API key is set."""
+    global OPENAI_API_KEY
+    
     if not OPENAI_API_KEY:
-        print("Error: OpenAI API key is not set. Please set the OPENAI_API_KEY environment variable.")
-        print("You can get an API key from https://platform.openai.com/")
-        print("Example: set OPENAI_API_KEY=your-key-here")
+        OPENAI_API_KEY = get_api_key()
+    
+    if not OPENAI_API_KEY:
+        print("Error: OpenAI API key is required to generate images.")
         return False
+    
     return True
 
 def generate_image(prompt, image_path, attempt=1, max_attempts=3):
@@ -231,8 +292,7 @@ def create_video_with_ffmpeg(image_paths):
     
     # Output video path
     output_video = os.path.join(VIDEO_OUTPUT_DIR, FINAL_VIDEO_NAME)
-    
-    # Create video using ffmpeg
+      # Create video using ffmpeg
     try:
         cmd = [
             "ffmpeg", "-y", "-r", str(FPS), "-f", "concat", "-safe", "0",
@@ -242,14 +302,28 @@ def create_video_with_ffmpeg(image_paths):
             "-movflags", "+faststart", "-g", "30",
             output_video
         ]
-        subprocess.run(cmd, check=True)
+        # Print the command for debugging purposes
+        print(f"Running ffmpeg command to create video...")
+        
+        # Run the command and capture output
+        process = subprocess.run(
+            cmd,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
         print(f"Video successfully created: {output_video}")
         
         # Add captions to the video
         add_captions_to_video(output_video)
         
+    except FileNotFoundError:
+        print("Error: ffmpeg command not found. Make sure ffmpeg is installed and in your PATH.")
+        return False
     except subprocess.CalledProcessError as e:
         print(f"Error creating video: {e}")
+        print(f"ffmpeg error message: {e.stderr if hasattr(e, 'stderr') else 'No error message available'}")
         return False
     finally:
         # Clean up temporary directory
@@ -277,8 +351,7 @@ def add_captions_to_video(video_path):
             f.write(f"{i+1}\n")
             f.write(f"{start_time_fmt} --> {end_time_fmt}\n")
             f.write(f"{scene['caption']}\n\n")
-    
-    # Add subtitles to the video
+      # Add subtitles to the video
     try:
         cmd = [
             "ffmpeg", "-y", "-i", video_path, "-vf",
@@ -286,15 +359,30 @@ def add_captions_to_video(video_path):
             "-c:v", "libx264", "-crf", "23", "-preset", "medium", 
             temp_video
         ]
-        subprocess.run(cmd, check=True)
+        print("Adding captions to video...")
+        
+        # Run the command and capture output
+        process = subprocess.run(
+            cmd,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
         
         # Replace original with captioned version
         os.replace(temp_video, video_path)
         
         print("Captions added successfully!")
         
+    except FileNotFoundError:
+        print("Error: ffmpeg command not found. Make sure ffmpeg is installed and in your PATH.")
+        # If captioning fails, keep the original video
+        if os.path.exists(temp_video):
+            os.remove(temp_video)
     except subprocess.CalledProcessError as e:
         print(f"Error adding captions: {e}")
+        print(f"ffmpeg error message: {e.stderr if hasattr(e, 'stderr') else 'No error message available'}")
         # If captioning fails, keep the original video
         if os.path.exists(temp_video):
             os.remove(temp_video)
@@ -308,6 +396,12 @@ def main():
     
     # Check API key
     if not check_api_key():
+        return
+    
+    # Check ffmpeg installation
+    if not check_ffmpeg():
+        print("Error: ffmpeg is not installed or not found in PATH.")
+        print("Please install ffmpeg and ensure it's in your system's PATH.")
         return
     
     # Generate images for all scenes
