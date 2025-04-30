@@ -52,8 +52,7 @@ class WindowManager {
         // Listen for keyboard shortcuts
         window.addEventListener('keydown', this.handleKeydown.bind(this));
     }
-    
-    /**
+      /**
      * Set up the guide button (42) to open the README.md with installation instructions
      */
     setupGuideButton() {
@@ -61,9 +60,14 @@ class WindowManager {
         if (guideButton) {
             guideButton.addEventListener('click', () => {
                 this.openReadme();
+                
+                // Show notification about the video generator after a delay
+                setTimeout(() => {
+                    this.showNotification("Try the new Monty Python video generator! Check VIDEO_GENERATOR_README.md");
+                }, 3000);
             });
         }
-    }    /**
+    }/**
      * Open the README.md file with installation instructions
      */
     openReadme() {
